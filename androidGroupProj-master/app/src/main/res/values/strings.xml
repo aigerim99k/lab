@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">LoginActivity</string>
+    <string name="user_name">Aigerim</string>
+    <string name= "user_password">12345</string>
+    <string name="login_preference">com.example.lab6_login_preference</string>
+    <string name="login_status_preference">com.example.lab6_login_status_preference</string>
+
+</resources>
+
