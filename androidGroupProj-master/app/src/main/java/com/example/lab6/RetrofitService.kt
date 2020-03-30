@@ -1,51 +1,27 @@
  package com.example.lab6
 
-import android.telecom.Call
-import android.util.Log
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
-import retrofit2.http.Path
-import java.util.concurrent.TimeUnit
 
-object RetrofitService
+ //https://api.themoviedb.org/3/movie/popular?api_key=8903dbd0a0cd67d1981d5ee41688dc11 - list of movies
+ //https://api.themoviedb.org/3/movie/550?api_key=8903dbd0a0cd67d1981d5ee41688dc11 - single movie
+ //https://image.tmdb.org/t/p/w342/4GpwvwDjgwiShr1UBJIn5fk1gwT.jpg - poster path
+
+ object RetrofitService
 {
-    const val BASE_URL = "http://api.themoviedb.org/3/"
+    const val BASE_URL = "https://api.themoviedb.org/3/"
+    const val POSTER_BASE_URL = "https://image.tmdb.org/t/p/w342/"
 
-    fun getMovieApi() : MovieApi{
-        val retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)  ////
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(getOkHttp())
-            .build()
-        return retrofit.create(MovieApi::class.java)
+    private val client = OkHttpClient.Builder().build()
+
+    private val retrofit = Retrofit.Builder()
+        .baseUrl("https://api.themoviedb.org/")
+        .addConverterFactory(GsonConverterFactory.create())
+        .client(client)
+        .build()
+
+    fun<T> getMovieApi(service: Class<T>): T{
+        return retrofit.create(service)
     }
-
-    private fun getOkHttp(): OkHttpClient {
-        val okHttpClient = OkHttpClient.Builder()
-            .connectTimeout(60, TimeUnit.SECONDS)
-            .readTimeout(60, TimeUnit.SECONDS)
-            .addInterceptor(getLoggingInterceptor())
-        return okHttpClient.build()
-    }
-
-    private fun getLoggingInterceptor(): HttpLoggingInterceptor {
-        return HttpLoggingInterceptor(logger = object : HttpLoggingInterceptor.Logger {
-            override fun log(message: String) {
-                Log.d("OkHttp", message)
-            }
-        }).apply {
-            level = HttpLoggingInterceptor.Level.BODY
-        }
-    }
-}
-
-interface MovieApi{
-    @GET("movies")
-    fun getMovieList(): retrofit2.Call<List<Movie>>
-
-    @GET("movie/{id}")
-    fun getMovieById(@Path("id") id: Int): retrofit2.Call<Movie>
 }
