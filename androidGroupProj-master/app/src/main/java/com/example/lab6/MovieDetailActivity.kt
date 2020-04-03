@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import com.bumptech.glide.Glide
 import com.example.lab6.json.Movie
 import kotlinx.android.synthetic.main.activity_movie_detail.*
 import org.w3c.dom.Text
@@ -14,41 +16,30 @@ import javax.security.auth.callback.Callback
 
 class MovieDetailActivity : AppCompatActivity() {
 
-    lateinit var movieName1: TextView
-    lateinit var postImage: ImageView
-    lateinit var genre: TextView
-    lateinit var rating: TextView
-    lateinit var country: TextView
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_detail)
+        val poster_text: String? = intent.getStringExtra("poster")
+        val title_text: String? = intent.getStringExtra("title")
+        val overview_text: String? = intent.getStringExtra("overview")
+        val release_text: String? = intent.getStringExtra("release")
+        val ratingtext: Double? = intent.getDoubleExtra("rating", 0.0)
 
-        movieName1 = findViewById(R.id.movieName1)
-        genre = findViewById(R.id.genre)
-        rating = findViewById(R.id.rating)
-        country= findViewById(R.id.country)
-        postImage = findViewById(R.id.postImage)
+        val photo: ImageView = findViewById(R.id.moviephoto)
+        val title: TextView = findViewById(R.id.movietitle)
+        val overview: TextView = findViewById(R.id.movieoverview)
+        val rating: TextView = findViewById(R.id.movierating)
+        val release: TextView = findViewById(R.id.movierelease)
+
+        Glide.with(this)
+            .load(poster_text)
+            .into(photo)
+
+        title.text = "Title: $title_text"
+        overview.text = "Overview: $overview_text"
+        rating.text = "Rating: $ratingtext"
+        release.text = "Release date: $release_text"
+
     }
 
-
-
-//    private fun getMovies(id: Int) {
-//        RetrofitService.getMovieApi().getMovieById(id).enqueue(object : retrofit2.Callback<Movie> {
-//            override fun onFailure(call: Call<Movie>, t: Throwable) {
-//                progressBar.visibility = View.GONE
-//            }
-//
-//            override fun onResponse(call: Call<Movie>, response: Response<Movie>) {
-//                progressBar.visibility = View.GONE
-//                val movie = response.body()
-//                if (movie != null) {
-//                    movieName1.text = movie.title
-//                    genre.text = movie.genres.toString()
-//                    rating.text = movie.voteAverage.toString()
-//                    country.text = movie.productionCountries.toString()
-//                }
-//            }
-//        })
-//    }
 }

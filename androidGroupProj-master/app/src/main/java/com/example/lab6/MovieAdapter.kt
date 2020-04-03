@@ -1,18 +1,19 @@
 package com.example.lab6
 
-import android.provider.Settings.Global.getString
+import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.lab6.json.GenreX
-import com.example.lab6.json.Movie
 import com.example.lab6.json.Result
 
-class MoviesAdapter(val movies: List<Result>): RecyclerView.Adapter<MoviesViewHolder>() {
+class MoviesAdapter(val movies: List<Result>, val context: Context): RecyclerView.Adapter<MoviesViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MoviesViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.movie_item, parent, false)
@@ -24,6 +25,19 @@ class MoviesAdapter(val movies: List<Result>): RecyclerView.Adapter<MoviesViewHo
     }
 
     override fun onBindViewHolder(holder: MoviesViewHolder, position: Int) {
+        holder.itemView.setOnClickListener {
+            val intent = Intent(context, MovieDetailActivity::class.java).also {
+                it.putExtra(
+                    "poster",
+                    "https://image.tmdb.org/t/p/w342${movies[position].backdrop_path}"
+                )
+                it.putExtra("title", movies[position].title)
+                it.putExtra("release", movies[position].release_date)
+                it.putExtra("overview", movies[position].overview)
+                it.putExtra("rating", movies[position].vote_average)
+            }
+            context.startActivity(intent)
+        }
         return holder.bind(movies[position])
     }
 }

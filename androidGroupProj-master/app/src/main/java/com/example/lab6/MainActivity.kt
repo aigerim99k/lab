@@ -32,7 +32,7 @@ class MainActivity : BaseActivity(0) {
                     recyclerView.apply {
                         setHasFixedSize(true)
                         layoutManager = LinearLayoutManager(this@MainActivity)
-                        adapter = MoviesAdapter(response.body()!!.results)
+                        adapter = MoviesAdapter(response.body()!!.results, this@MainActivity)
                     }
                 }
             }

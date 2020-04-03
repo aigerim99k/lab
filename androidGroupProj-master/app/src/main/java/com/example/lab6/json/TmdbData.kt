@@ -11,6 +11,7 @@ data class Result(
     val title: String,
     val vote_average: Double,
     val vote_count: Int,
-    val runtime: Int
+    val runtime: Int,
+    val backdrop_path: String
 )
 
