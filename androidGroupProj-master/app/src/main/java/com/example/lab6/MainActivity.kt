@@ -18,9 +18,9 @@ class MainActivity : BaseActivity(0) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        setContentView(R.layout.activity_main)
-        setupBottomNavigation()
         Log.d(TAG, "onCreate")
+
+        setupBottomNavigation()
 
         val request = RetrofitService.getMovieApi(MovieApi::class.java)
         val call = request.getMovieList(getString(R.string.api_key))
@@ -40,6 +40,7 @@ class MainActivity : BaseActivity(0) {
                 Toast.makeText(this@MainActivity, "${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
+
     }
 
 }

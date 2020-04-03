@@ -31,6 +31,8 @@ class MovieDetailActivity : AppCompatActivity() {
         postImage = findViewById(R.id.postImage)
     }
 
+
+
 //    private fun getMovies(id: Int) {
 //        RetrofitService.getMovieApi().getMovieById(id).enqueue(object : retrofit2.Callback<Movie> {
 //            override fun onFailure(call: Call<Movie>, t: Throwable) {

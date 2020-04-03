@@ -4,50 +4,103 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+    <TextView
+            android:id="@+id/movie_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:paddingLeft="20dp"
+            android:text="1"/>
 
     <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp">
+            android:layout_marginVertical="10dp"
+            android:layout_below="@id/movie_id">
 
         <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:id="@+id/rel_lay"
+                >
 
             <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:layout_centerHorizontal="true"
                     android:id="@+id/movie_photo"
-                    android:contentDescription="Movie Image" />
+                    android:layout_width="120dp"
+                    android:layout_height="200dp"
+                    android:layout_margin="10dp"/>
+
 
             <TextView
-                    android:layout_below="@+id/movie_photo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:id="@+id/movie_title"
-                    android:layout_margin="5dp"
-                    android:textSize="15sp"
-                    android:text="Title : "/>
-
-            <TextView
-                    android:layout_below="@+id/movie_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/movie_overview"
-                    android:layout_margin="5dp"
-                    android:text="OverView : "/>
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_marginTop="25dp"
+                    android:layout_toRightOf="@+id/movie_photo"
+                    android:text="Title : "
+                    android:textSize="15sp" />
 
             <TextView
-                    android:layout_below="@+id/movie_overview"
+                    android:layout_toRightOf="@+id/movie_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/release_date"
+                    android:layout_marginTop="25dp"
+                    android:textSize="15sp"
+                    android:text="ReleaseDate"/>
+
+            <TextView
+                    android:layout_below="@id/movie_title"
+                    android:layout_toRightOf="@id/movie_photo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/genres"
+                    android:textSize="15sp"
+                    android:layout_margin="5dp"
+                    android:text="genres"/>
+
+            <TextView
+                    android:layout_toRightOf="@+id/movie_photo"
+                    android:layout_below="@+id/genres"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/movie_rating"
                     android:textSize="15sp"
                     android:layout_margin="5dp"
-                    android:text="Rating : "/>
+                    android:text="rating"/>
 
+            <TextView
+                    android:layout_toRightOf="@+id/movie_rating"
+                    android:layout_below="@+id/genres"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/movie_votes"
+                    android:textSize="15sp"
+                    android:layout_margin="5dp"
+                    android:text="votes"/>
 
+            <TextView
+                    android:id="@+id/countries"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/movie_votes"
+                    android:layout_below="@+id/genres"
+                    android:layout_marginTop="11dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="60dp"
+                    android:text="countries"
+                    android:textSize="15sp" />
+
+            <ImageView
+                    android:id="@+id/like"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_alignBottom="@+id/movie_photo"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:src="@drawable/ic_like" />
         </RelativeLayout>
 
     </androidx.cardview.widget.CardView>

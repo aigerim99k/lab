@@ -1,5 +1,6 @@
 package com.example.lab6
 
+import android.provider.Settings.Global.getString
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,9 +8,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.lab6.json.GenreX
+import com.example.lab6.json.Movie
 import com.example.lab6.json.Result
 
 class MoviesAdapter(val movies: List<Result>): RecyclerView.Adapter<MoviesViewHolder>() {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MoviesViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.movie_item, parent, false)
         return MoviesViewHolder(view)
@@ -27,15 +31,23 @@ class MoviesAdapter(val movies: List<Result>): RecyclerView.Adapter<MoviesViewHo
 class MoviesViewHolder(itemView : View): RecyclerView.ViewHolder(itemView){
     private val photo:ImageView = itemView.findViewById(R.id.movie_photo)
     private val title:TextView = itemView.findViewById(R.id.movie_title)
-    private val overview:TextView = itemView.findViewById(R.id.movie_overview)
     private val rating:TextView = itemView.findViewById(R.id.movie_rating)
+    private val votes:TextView = itemView.findViewById(R.id.movie_votes)
+    private val releaseDate:TextView = itemView.findViewById(R.id.release_date)
+    private val movieId:TextView = itemView.findViewById(R.id.movie_id)
+    private val genres:TextView = itemView.findViewById(R.id.genres)
 
     fun bind(movie: Result) {
-        Glide.with(itemView.context).load("http://image.tmdb.org/t/p/w500${movie.poster_path}").into(photo)
-        title.text = "Title: "+movie.title
-        overview.text = movie.overview
-        rating.text = "Rating : "+movie.vote_average.toString()
-    }
+        Glide.with(itemView.context)
+            .load("https://image.tmdb.org/t/p/w342${movie.poster_path}")
+            .into(photo)
 
+        movieId.text = (adapterPosition+1).toString()
+        title.text = movie.title
+        rating.text = movie.vote_average.toString()
+        votes.text = movie.vote_count.toString()
+        releaseDate.text = "("+movie.release_date+")"
+        genres.text = ""
+    }
 }
 
