@@ -10,13 +10,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 
  object RetrofitService
 {
-    const val BASE_URL = "https://api.themoviedb.org/3/"
-    const val POSTER_BASE_URL = "https://image.tmdb.org/t/p/w342/"
+    const val BASE_URL = "https://api.themoviedb.org"
 
     private val client = OkHttpClient.Builder().build()
 
     private val retrofit = Retrofit.Builder()
-        .baseUrl("https://api.themoviedb.org/")
+        .baseUrl(BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .client(client)
         .build()

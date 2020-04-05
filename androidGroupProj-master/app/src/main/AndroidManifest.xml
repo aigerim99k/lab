@@ -11,13 +11,13 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-            <activity android:name=".MovieDetailActivity">
+            <activity android:name=".Movie.MovieDetailActivity">
             </activity>
             <activity android:name=".Account">
             </activity>
             <activity android:name=".Favourite">
             </activity>
-            <activity android:name=".MainActivity">
+            <activity android:name=".Movie.MainActivity">
             </activity>
          <activity android:name=".autorization.LoginActivity">
             <intent-filter>

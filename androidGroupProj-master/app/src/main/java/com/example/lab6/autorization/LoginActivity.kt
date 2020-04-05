@@ -3,12 +3,11 @@ package com.example.lab6.autorization
 import androidx.appcompat.app.AppCompatActivity
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
-import com.example.lab6.MainActivity
+import com.example.lab6.Movie.MainActivity
 import com.example.lab6.R
 
 class LoginActivity : AppCompatActivity() {
