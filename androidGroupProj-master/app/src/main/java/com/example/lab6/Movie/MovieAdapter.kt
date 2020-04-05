@@ -1,16 +1,17 @@
-package com.example.lab6
+package com.example.lab6.Movie
 
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.lab6.MovieApi
+import com.example.lab6.R
+import com.example.lab6.RetrofitService
 import com.example.lab6.json.Result
 
 class MoviesAdapter(val movies: List<Result>, val context: Context): RecyclerView.Adapter<MoviesViewHolder>() {
@@ -27,14 +28,7 @@ class MoviesAdapter(val movies: List<Result>, val context: Context): RecyclerVie
     override fun onBindViewHolder(holder: MoviesViewHolder, position: Int) {
         holder.itemView.setOnClickListener {
             val intent = Intent(context, MovieDetailActivity::class.java).also {
-                it.putExtra(
-                    "poster",
-                    "https://image.tmdb.org/t/p/w342${movies[position].backdrop_path}"
-                )
-                it.putExtra("title", movies[position].title)
-                it.putExtra("release", movies[position].release_date)
-                it.putExtra("overview", movies[position].overview)
-                it.putExtra("rating", movies[position].vote_average)
+                it.putExtra("id", movies[position].id)
             }
             context.startActivity(intent)
         }
@@ -50,12 +44,13 @@ class MoviesViewHolder(itemView : View): RecyclerView.ViewHolder(itemView){
     private val releaseDate:TextView = itemView.findViewById(R.id.release_date)
     private val movieId:TextView = itemView.findViewById(R.id.movie_id)
     private val genres:TextView = itemView.findViewById(R.id.genres)
-
+    private var id: Int = 0
     fun bind(movie: Result) {
         Glide.with(itemView.context)
             .load("https://image.tmdb.org/t/p/w342${movie.poster_path}")
             .into(photo)
 
+        id = movie.id
         movieId.text = (adapterPosition+1).toString()
         title.text = movie.title
         rating.text = movie.vote_average.toString()
@@ -64,4 +59,5 @@ class MoviesViewHolder(itemView : View): RecyclerView.ViewHolder(itemView){
         genres.text = ""
     }
 }
+
 

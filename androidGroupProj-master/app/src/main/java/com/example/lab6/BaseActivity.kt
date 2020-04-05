@@ -3,7 +3,7 @@ package com.example.lab6
 import android.content.Intent
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_main.*
+import com.example.lab6.Movie.MainActivity
 import kotlinx.android.synthetic.main.bottom_nav.*
 
 abstract class BaseActivity(val navNumber: Int) : AppCompatActivity() {
