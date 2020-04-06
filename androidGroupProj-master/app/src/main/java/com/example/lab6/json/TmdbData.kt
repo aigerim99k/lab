@@ -17,6 +17,7 @@ data class Result(
     val runtime: Int,
     val backdrop_path: String,
     val genres: List<Genre>,
+    val genre_ids: List<Int>,
     val original_title: String,
     val tagline: String,
     val production_countries: List<ProductionCountryX>
