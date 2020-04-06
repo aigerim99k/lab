@@ -11,9 +11,6 @@ import com.example.lab6.MovieApi
 import com.example.lab6.R
 import com.example.lab6.RetrofitService
 import com.example.lab6.json.Result
-import kotlinx.android.synthetic.main.activity_movie_detail.*
-import kotlinx.android.synthetic.main.activityyy_main.*
-import org.w3c.dom.Text
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -58,7 +55,7 @@ class MovieDetailActivity : AppCompatActivity() {
 
     fun getMovie(id: Int){
         RetrofitService.getMovieApi(MovieApi::class.java)
-            .getMovieById(id, getString(R.string.api_key), "rus").enqueue(
+            .getMovieById(id, getString(R.string.api_key), "ru").enqueue(
             object : Callback<Result> {
 
             override fun onResponse(call: Call<Result>, response: Response<Result>) {
@@ -67,23 +64,38 @@ class MovieDetailActivity : AppCompatActivity() {
                         .load("https://image.tmdb.org/t/p/w342${movie?.poster_path}")
                         .into(posterImage)
 
+                var str: String = ""
+
+                for (i in 0..3){
+                    str += movie!!.release_date[i]
+                }
+
                 titleOriginal.text = movie?.original_title
-                release.text = "(" + movie?.release_date + ")"
-                genres.text = movie?.genres?.map { it.name }.toString()
-                tagline.text = movie?.tagline
+                release.text = "(" + str + ")"
+                genres.text = getListOfString(movie?.genres?.map { it.name }.toString().length, movie?.genres?.map { it.name }.toString())
+                tagline.text = "«" + movie?.tagline + "»"
                 rusTitle.text = movie?.title
-                countries.text = movie?.production_countries?.map { it.iso_3166_1 }.toString()
+                countries.text = getListOfString(movie?.production_countries?.map { it.iso_3166_1 }.toString().length, movie?.production_countries?.map { it.iso_3166_1 }.toString())
                 runtime.text = movie?.runtime.toString()
                 overview.text = movie?.overview
                 rating.text = movie?.vote_average.toString()
                 votes.text = movie?.vote_count.toString()
                 ratingBar.rating = movie?.vote_average!!.toFloat()
+
             }
 
             override fun onFailure(call: Call<Result>, t: Throwable){
                 Toast.makeText(this@MovieDetailActivity, "${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    fun getListOfString(len: Int, s: String): String {
+        var str: String = ""
+        for (i in 1..len-2) {
+            str += s[i]
+        }
+        return str
     }
 
     fun configureBackButton(){

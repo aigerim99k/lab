@@ -12,7 +12,11 @@ import com.bumptech.glide.Glide
 import com.example.lab6.MovieApi
 import com.example.lab6.R
 import com.example.lab6.RetrofitService
+import com.example.lab6.json.Genre
 import com.example.lab6.json.Result
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class MoviesAdapter(val movies: List<Result>, val context: Context): RecyclerView.Adapter<MoviesViewHolder>() {
 
@@ -38,26 +42,35 @@ class MoviesAdapter(val movies: List<Result>, val context: Context): RecyclerVie
 
 class MoviesViewHolder(itemView : View): RecyclerView.ViewHolder(itemView){
     private val photo:ImageView = itemView.findViewById(R.id.movie_photo)
-    private val title:TextView = itemView.findViewById(R.id.movie_title)
+    private val title:TextView = itemView.findViewById(R.id.originalTitle)
+    private val rusTitle:TextView = itemView.findViewById(R.id.RusTitle)
     private val rating:TextView = itemView.findViewById(R.id.movie_rating)
     private val votes:TextView = itemView.findViewById(R.id.movie_votes)
     private val releaseDate:TextView = itemView.findViewById(R.id.release_date)
     private val movieId:TextView = itemView.findViewById(R.id.movie_id)
     private val genres:TextView = itemView.findViewById(R.id.genres)
     private var id: Int = 0
+
     fun bind(movie: Result) {
         Glide.with(itemView.context)
             .load("https://image.tmdb.org/t/p/w342${movie.poster_path}")
             .into(photo)
+        var str = ""
 
+        for (i in 0..3){
+            str += movie.release_date[i]
+        }
         id = movie.id
         movieId.text = (adapterPosition+1).toString()
         title.text = movie.title
+        rusTitle.text = movie.original_title
         rating.text = movie.vote_average.toString()
         votes.text = movie.vote_count.toString()
-        releaseDate.text = "("+movie.release_date+")"
-        genres.text = ""
-    }
-}
+        releaseDate.text = "("+str+")"
 
+//        genres.text = movie.genre_ids.toString()
+//        getGenres(movie.genre_ids)
+    }
+
+}
 
