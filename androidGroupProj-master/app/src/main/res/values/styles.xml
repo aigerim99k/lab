@@ -9,4 +9,9 @@
         <item name="android:windowLightStatusBar">true</item>
     </style>
 
+    <style name="startStyle" parent="Widget.AppCompat.RatingBar.Small">
+        <item name="colorControlNormal">#FFC107</item>
+        <item name="colorControlActivated">#FFC107</item>
+    </style>
+
 </resources>
