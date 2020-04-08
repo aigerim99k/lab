@@ -1,28 +1,45 @@
 package com.example.lab6
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Button
+import android.widget.TextView
 import com.example.lab6.autorization.LoginActivity
-import com.example.lab6.autorization.SharedPreferenceConfig
+import com.example.lab6.autorization.PreferenceUtils
+import com.example.lab6.autorization.UsersActivity
+
 
 class Account : BaseActivity(2) {
-    private var preferenceConfig: SharedPreferenceConfig? = null
     private val TAG = "AccountActivity"
+    private var textViewName: TextView? = null
+    var logout: Button? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_account)
-        preferenceConfig = SharedPreferenceConfig(applicationContext)
         setupBottomNavigation()
         Log.d(TAG, "onCreate")
-    }
+        logout = findViewById(R.id.logout)
+        textViewName = findViewById<View>(R.id.profileText) as TextView
 
-    fun userLogOut(view: View) {
-        preferenceConfig!!.writeLoginStatus(false)
-        startActivity(Intent(this, LoginActivity::class.java))
-        finish()
+
+
+        val intent = intent
+        if (intent.hasExtra("EMAIL")) {
+            val nameFromIntent = getIntent().getStringExtra("EMAIL")
+            textViewName!!.setText("$nameFromIntent");
+        } else {
+            val email = PreferenceUtils.getEmail(this)
+            textViewName!!.text = "Профиль"
+        }
+        logout!!.setOnClickListener(View.OnClickListener {
+            PreferenceUtils.savePassword(null, this@Account)
+            PreferenceUtils.saveEmail(null, this@Account)
+            val intent = Intent(this@Account, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
+        })
     }
 }

@@ -19,6 +19,9 @@
             </activity>
             <activity android:name=".Movie.MainActivity">
             </activity>
+        <activity android:name=".autorization.RegisterActivity">
+        </activity>
+
          <activity android:name=".autorization.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

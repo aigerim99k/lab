@@ -11,6 +11,7 @@ import com.example.lab6.MovieApi
 import com.example.lab6.R
 import com.example.lab6.RetrofitService
 import com.example.lab6.json.Result
+import org.w3c.dom.Text
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

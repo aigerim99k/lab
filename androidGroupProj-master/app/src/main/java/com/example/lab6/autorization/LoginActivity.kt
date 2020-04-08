@@ -1,45 +1,108 @@
 package com.example.lab6.autorization
 
-import androidx.appcompat.app.AppCompatActivity
-
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.TextView
-import android.widget.Toast
-import com.example.lab6.Movie.MainActivity
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatButton
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.widget.NestedScrollView
 import com.example.lab6.R
+import com.example.lab6.autorization.PreferenceUtils.saveEmail
+import com.example.lab6.autorization.PreferenceUtils.savePassword
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
+import com.example.lab6.Account
 
-class LoginActivity : AppCompatActivity() {
-    private var preferenceConfig: SharedPreferenceConfig? = null
-    private var UserName: TextView? = null
-    private var UserPassword: TextView? = null
+
+
+class LoginActivity : AppCompatActivity(), View.OnClickListener {
+    private val activity: AppCompatActivity = this@LoginActivity
+    private var nestedScrollView: NestedScrollView? = null
+    private var textInputLayoutEmail: TextInputLayout? = null
+    private var textInputLayoutPassword: TextInputLayout? = null
+    private var textInputEditTextEmail: TextInputEditText? = null
+    private var textInputEditTextPassword: TextInputEditText? = null
+    private var appCompatButtonLogin: AppCompatButton? = null
+    private var textViewLinkRegister: AppCompatTextView? = null
+    private var textViewLinkForgotPassword: AppCompatTextView? = null
+    private var inputValidation: InputValidation? = null
+    private var databaseHelper: DatabaseHelper? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activityyy_main)
-        preferenceConfig = SharedPreferenceConfig(applicationContext)
-        UserName = findViewById(R.id.user_name)
-        UserPassword = findViewById(R.id.user_password)
-
-        if (preferenceConfig!!.readLoginStatus()) {
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
-        }
-
+        setContentView(R.layout.activity_login)
+        //        getSupportActionBar().hide();
+        initViews()
+        initListeners()
+        initObjects()
     }
 
-    fun loginUser(view: View) {
-        val username = UserName!!.text.toString()
-        val userpassword = UserPassword!!.text.toString()
-        if (username == resources.getString(R.string.user_name) && userpassword == resources.getString(R.string.user_password)) {
-            startActivity(Intent(this, MainActivity::class.java))
-            preferenceConfig!!.writeLoginStatus(true)
+    private fun initViews() {
+//        nestedScrollView = findViewById(R.id.nestedScrollView)
+        textInputLayoutEmail = findViewById<View>(R.id.textInputLayoutEmail) as TextInputLayout
+        textInputLayoutPassword = findViewById<View>(R.id.textInputLayoutPassword) as TextInputLayout
+        textInputEditTextEmail = findViewById<View>(R.id.textInputEditTextEmail) as TextInputEditText
+        textInputEditTextPassword = findViewById<View>(R.id.textInputEditTextPassword) as TextInputEditText
+        appCompatButtonLogin = findViewById<View>(R.id.appCompatButtonLogin) as AppCompatButton
+        textViewLinkRegister = findViewById<View>(R.id.textViewLinkRegister) as AppCompatTextView
+        textViewLinkForgotPassword = findViewById<View>(R.id.forgotPassword) as AppCompatTextView
+        val utils = PreferenceUtils
+        if (utils.getEmail(this) != null) {
+            val intent = Intent(this@LoginActivity, Account::class.java)
+            startActivity(intent)
+        } else {
+        }
+    }
+
+    private fun initListeners() {
+        appCompatButtonLogin!!.setOnClickListener(this)
+        textViewLinkRegister!!.setOnClickListener(this)
+        textViewLinkForgotPassword!!.setOnClickListener(this)
+    }
+
+    private fun initObjects() {
+        databaseHelper = DatabaseHelper(activity)
+        inputValidation = InputValidation(activity)
+    }
+
+    override fun onClick(v: View) {
+        when (v.id) {
+            R.id.appCompatButtonLogin -> verifyFromSQLite()
+            R.id.textViewLinkRegister -> {
+                val intentRegister = Intent(applicationContext, RegisterActivity::class.java)
+                startActivity(intentRegister)
+            }
+        }
+    }
+
+    private fun verifyFromSQLite() {
+        if (!inputValidation!!.isInputEditTextFilled(textInputEditTextEmail!!, textInputLayoutEmail!!, getString(R.string.error_message_email))) {
+            return
+        }
+        if (!inputValidation!!.isInputEditTextEmail(textInputEditTextEmail!!, textInputLayoutEmail!!, getString(R.string.error_message_email))) {
+            return
+        }
+        if (!inputValidation!!.isInputEditTextFilled(textInputEditTextPassword!!, textInputLayoutPassword!!, getString(R.string.error_message_email))) {
+            return
+        }
+        val email = textInputEditTextEmail!!.text.toString().trim { it <= ' ' }
+        val password = textInputEditTextPassword!!.text.toString().trim { it <= ' ' }
+        if (databaseHelper!!.checkUser(email, password)) {
+            saveEmail(email, this)
+            savePassword(password, this)
+            val accountsIntent = Intent(activity, Account::class.java)
+            accountsIntent.putExtra("EMAIL", textInputEditTextEmail!!.text.toString().trim { it <= ' ' })
+            emptyInputEditText()
+            startActivity(accountsIntent)
             finish()
         } else {
-            Toast.makeText(this, "Login Failed.Try again", Toast.LENGTH_SHORT).show()
-            UserName!!.text = ""
-            UserPassword!!.text = ""
+            Snackbar.make(nestedScrollView!!, getString(R.string.error_valid_email_password), Snackbar.LENGTH_LONG).show()
         }
     }
 
+    private fun emptyInputEditText() {
+        textInputEditTextEmail!!.setText(null)
+        textInputEditTextPassword!!.setText(null)
+    }
 }

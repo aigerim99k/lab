@@ -11,7 +11,7 @@
             android:id="@+id/profileText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Профиль"
+            android:text=" "
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:textStyle="bold"
@@ -144,7 +144,7 @@
     />
 
     <Button
-            android:id="@+id/loginButton"
+            android:id="@+id/logout"
             android:onClick="userLogOut"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
