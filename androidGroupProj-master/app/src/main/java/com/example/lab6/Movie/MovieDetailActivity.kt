@@ -10,11 +10,20 @@ import com.bumptech.glide.Glide
 import com.example.lab6.MovieApi
 import com.example.lab6.R
 import com.example.lab6.RetrofitService
+import com.example.lab6.json.FavoriteRequest
+import com.example.lab6.json.FavoriteResponse
 import com.example.lab6.json.Result
-import org.w3c.dom.Text
+import com.google.gson.Gson
+import com.google.gson.JsonObject
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.Request
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
 
 class MovieDetailActivity : AppCompatActivity() {
 
@@ -30,7 +39,8 @@ class MovieDetailActivity : AppCompatActivity() {
     lateinit var rating: TextView
     lateinit var votes: TextView
     lateinit var ratingBar: RatingBar
-
+    lateinit var like: ImageView
+    var isFavorit: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +58,28 @@ class MovieDetailActivity : AppCompatActivity() {
         rating = findViewById(R.id.rating)
         votes = findViewById(R.id.voteCount)
         ratingBar = findViewById(R.id.starRating)
+        like = findViewById(R.id.like)
+
         val movieId = intent.getIntExtra("id", 1)
+        val pos = intent.getIntExtra("pos", 1)
+
+        if(flags[pos] == true){
+            like.setImageResource(R.drawable.ic_lliked)
+         }else{
+            like.setImageResource(R.drawable.ic_like)
+         }
+
+        like.setOnClickListener {
+            if(flags[pos] == true){
+                like.setImageResource(R.drawable.ic_like)
+                flags[pos] = false;
+                makeUnFavorite(id=movieId)
+            }else{
+                like.setImageResource(R.drawable.ic_lliked)
+                flags[pos] = true;
+                makeFavorite(id=movieId);
+            }
+        }
 
         configureBackButton()
         getMovie(id=movieId)
@@ -107,4 +138,47 @@ class MovieDetailActivity : AppCompatActivity() {
         }
     }
 
+    fun makeFavorite(id: Int){
+        RetrofitService.getMovieApi(MovieApi::class.java).markFavoriteMovie(1, getString(R.string.api_key), "1d7900c966a3965dad207c6bd12abf21877b237d",
+        FavoriteRequest("movie", id, true)).enqueue(
+            object : Callback<FavoriteResponse>{
+                override fun onFailure(call: Call<FavoriteResponse>, t: Throwable) {
+                    TODO("Not yet implemented")
+                }
+
+                override fun onResponse(
+                    call: Call<FavoriteResponse>,
+                    response: Response<FavoriteResponse>
+                ) {
+                    val statMes  = response.body()?.status_message.toString()
+                    Toast.makeText(
+                        applicationContext,
+                        statMes,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            })
+    }
+
+    fun makeUnFavorite(id: Int){
+        RetrofitService.getMovieApi(MovieApi::class.java).markFavoriteMovie(1, getString(R.string.api_key), "1d7900c966a3965dad207c6bd12abf21877b237d",
+            FavoriteRequest("movie", id, false)).enqueue(
+            object : Callback<FavoriteResponse>{
+                override fun onFailure(call: Call<FavoriteResponse>, t: Throwable) {
+                    TODO("Not yet implemented")
+                }
+
+                override fun onResponse(
+                    call: Call<FavoriteResponse>,
+                    response: Response<FavoriteResponse>
+                ) {
+                    val statMes  = response.body()?.status_message.toString()
+                    Toast.makeText(
+                        applicationContext,
+                        statMes,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            })
+    }
 }

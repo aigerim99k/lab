@@ -107,18 +107,8 @@
                     android:layout_marginLeft="60dp"
                     android:text="США"
                     android:textColor="#000"
-
                     android:textSize="15sp" />
 
-            <ImageView
-                    android:id="@+id/like"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_alignBottom="@+id/movie_photo"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginBottom="5dp"
-                    android:src="@drawable/ic_like" />
         </RelativeLayout>
 
     </androidx.cardview.widget.CardView>
