@@ -1,5 +1,6 @@
 package com.example.lab6.json
 
+import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
 data class PopularMovies(
@@ -26,4 +27,15 @@ data class Result(
 data class Genre(
     val id: Int,
     val name: String
+)
+
+data class FavoriteResponse(
+    val status_code:Int,
+    val status_message:String
+)
+
+data class FavoriteRequest (
+    @SerializedName("media_type") val media_type: String,
+    @SerializedName("media_id") val media_id: Int,
+    @SerializedName("favorite") val favorite: Boolean
 )

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.lab6.Movie.MainActivity
+import com.example.lab6.favorite.Favourite
 import kotlinx.android.synthetic.main.bottom_nav.*
 
 abstract class BaseActivity(val navNumber: Int) : AppCompatActivity() {
