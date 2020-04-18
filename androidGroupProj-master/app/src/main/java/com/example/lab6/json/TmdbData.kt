@@ -39,3 +39,17 @@ data class FavoriteRequest (
     @SerializedName("media_id") val media_id: Int,
     @SerializedName("favorite") val favorite: Boolean
 )
+
+data class TokenResponse(
+    val request_token: String
+)
+
+data class Validation (
+    @SerializedName("username") val username: String,
+    @SerializedName("password") val password: String,
+    @SerializedName("request_token") val requestToken: String
+)
+
+data class Session(
+    @SerializedName("session_id") val session_id: String
+)
