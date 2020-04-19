@@ -8,7 +8,7 @@
         tools:context=".Account">
 
     <TextView
-            android:id="@+id/profileText"
+            android:id="@+id/txt_profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=" "
@@ -25,7 +25,7 @@
             android:id="@+id/moiKinoPoisk"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/profileText"
+            app:layout_constraintTop_toBottomOf="@id/txt_profile"
             app:layout_constraintStart_toStartOf="parent"
             android:textStyle="bold"
             android:textSize="15sp"
@@ -86,7 +86,7 @@
             android:padding="10dp"
             android:textColor="#000"
             android:layout_marginTop="10dp"
-            android:text="Мои Загрузги"
+            android:text="Мои Загрузки"
     />
 
     <TextView
@@ -145,7 +145,6 @@
 
     <Button
             android:id="@+id/logout"
-            android:onClick="userLogOut"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="@id/text7"

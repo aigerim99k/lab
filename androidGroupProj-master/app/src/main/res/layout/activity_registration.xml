@@ -13,7 +13,17 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/back"
+                android:clickable="true"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginTop="0dp"
+                android:background="@drawable/ic_arrow"
+                android:text=""
+                android:textColor="#000000"
+                android:textSize="0sp" />
         <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/appCompatTextViewLoginLink"
                 android:layout_width="fill_parent"
@@ -33,10 +43,10 @@
                 android:textColorHint="#000000">
 
             <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/textInputEditTextName"
+                    android:id="@+id/edt_Rname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Имя"
+                    android:hint="Username"
                     android:inputType="text"
                     android:maxLines="1"
                     android:textColor="#000000"
@@ -51,7 +61,7 @@
                 android:textColorHint="#000000">
 
             <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/textInputEditTextEmail"
+                    android:id="@+id/edt_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Email"
@@ -69,7 +79,7 @@
                 android:textColorHint="#000000">
 
             <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/textInputEditTextPassword"
+                    android:id="@+id/edt_Rpassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Пароль"
@@ -87,7 +97,7 @@
                 android:textColorHint="#000000">
 
             <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/textInputEditTextConfirmPassword"
+                    android:id="@+id/edt_RRepassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Повторите пароль"
@@ -98,7 +108,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/appCompatButtonRegister"
+                android:id="@+id/btn_register"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"

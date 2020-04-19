@@ -3,43 +3,51 @@ package com.example.lab6
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
-import com.example.lab6.autorization.LoginActivity
-import com.example.lab6.autorization.PreferenceUtils
-import com.example.lab6.autorization.UsersActivity
+import android.widget.Toast
+import com.example.lab6.authorization.Login
+import com.example.lab6.authorization.Login_and_registration
 
 
-class Account : BaseActivity(2) {
+class Account : BaseActivity(2), View.OnClickListener {
     private val TAG = "AccountActivity"
-    private var textViewName: TextView? = null
+    var str_getName: String? = null
+    var profile: TextView? = null
     var logout: Button? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_account)
         setupBottomNavigation()
         Log.d(TAG, "onCreate")
+        str_getName = Login_and_registration.sh!!.getString("name", null)
+        profile = findViewById(R.id.txt_profile)
         logout = findViewById(R.id.logout)
-        textViewName = findViewById<View>(R.id.profileText) as TextView
+        logout?.setOnClickListener(this)
 
+        profile?.setText(str_getName)
 
+    }
+    override fun onClick(v: View) {
+        Toast.makeText(applicationContext, "You have successfully logout",
+            Toast.LENGTH_LONG).show()
+        Login_and_registration.editor!!.remove("loginTest")
+        Login_and_registration.editor!!.commit()
+        val sendToLoginandRegistration = Intent(applicationContext,
+            Login::class.java)
+        startActivity(sendToLoginandRegistration)
+    }
 
-        val intent = intent
-        if (intent.hasExtra("EMAIL")) {
-            val nameFromIntent = getIntent().getStringExtra("EMAIL")
-            textViewName!!.setText("$nameFromIntent");
-        } else {
-            val email = PreferenceUtils.getEmail(this)
-            textViewName!!.text = "Профиль"
-        }
-        logout!!.setOnClickListener(View.OnClickListener {
-            PreferenceUtils.savePassword(null, this@Account)
-            PreferenceUtils.saveEmail(null, this@Account)
-            val intent = Intent(this@Account, LoginActivity::class.java)
+    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            val intent = Intent(this@Account,
+                Login_and_registration::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            intent.putExtra("EXIT", true)
             startActivity(intent)
-            finish()
-        })
+        }
+        return super.onKeyDown(keyCode, event)
     }
 }
