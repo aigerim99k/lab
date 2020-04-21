@@ -1,13 +1,18 @@
 package com.example.lab6.json
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
 data class PopularMovies(
     val results: List<Result>
 )
-
+@Entity (tableName = "movie_table")
 data class Result(
+    @PrimaryKey
     val id: Int,
     val overview: String,
     val poster_path: String,
@@ -17,12 +22,14 @@ data class Result(
     val vote_count: Int,
     val runtime: Int,
     val backdrop_path: String,
+    @ColumnInfo(name = "ListData")
+    @TypeConverters(GenresConverter::class)
     val genres: List<Genre>,
-    val genre_ids: List<Int>,
+//    val genre_ids: List<Int>,
     val original_title: String,
-    val tagline: String,
-    val production_countries: List<ProductionCountryX>
-) : Serializable
+    val tagline: String
+//    val production_countries: List<ProductionCountryX>
+)
 
 data class Genre(
     val id: Int,
@@ -53,3 +60,4 @@ data class Validation (
 data class Session(
     @SerializedName("session_id") val session_id: String
 )
+
