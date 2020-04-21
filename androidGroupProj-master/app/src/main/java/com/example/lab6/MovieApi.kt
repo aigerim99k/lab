@@ -11,43 +11,19 @@ import retrofit2.http.*
 
 interface MovieApi {
     @GET("/3/movie/popular")
-    fun getMovieList(@Query("api_key") key: String,
-                     @Query("language") lang: String): Call<PopularMovies>
-
-    @GET("/3/movie/popular")
     suspend fun getMovieListCoroutine(@Query("api_key") key: String,
-                                      @Query("language") lang: String) : Response<PopularMovies>
-
-    @GET("/3/movie/{movie_id}")
-    fun getMovieById(@Path("movie_id") movieId: Int,
-                     @Query("api_key") key: String,
-                     @Query("language") lang: String): Call<Result>
+                                      @Query("language") lang: String) : Response<List<Result>>
 
     @GET("/3/movie/{movie_id}")
     suspend fun getMovieByIdCoroutine(@Path("movie_id") movieId: Int,
                               @Query("api_key") key: String,
-                              @Query("language") lang: String) : Response<Result>
-
-    @GET("/3/genre/movie/list")
-    fun getMovieGenre(@Path("api_key") key: String): Call<Genre>
-
-    @POST("/3/account/{account_id}/favorite")
-    fun markFavoriteMovie(@Path("account_id") userId: Int,
-                          @Query("api_key") key: String,
-                          @Query("session_id") session_id: String,
-                          @Body favoriteRequest: FavoriteRequest): Call<FavoriteResponse>
+                              @Query("language") lang: String) : Response<Movie>
 
     @POST("/3/account/{account_id}/favorite")
     suspend fun markFavoriteMovieCoroutine(@Path("account_id") userId: Int,
                           @Query("api_key") key: String,
                           @Query("session_id") session_id: String,
                           @Body favoriteRequest: FavoriteRequest): Response<FavoriteResponse>
-
-    @GET("/3/account/{account_id}/favorite/movies")
-    fun getFavoriteMovies(@Path("account_id") userId: Int,
-                          @Query("api_key") key: String,
-                          @Query("session_id") session_id: String,
-                          @Query("language") lang: String): Call<PopularMovies>
 
     @GET("/3/account/{account_id}/favorite/movies")
      suspend fun getFavoriteMoviesCoroutine(@Path("account_id") userId: Int,

@@ -6,7 +6,6 @@ import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
-
 data class PopularMovies(
     val results: List<Result>
 )
@@ -22,9 +21,7 @@ data class Result(
     val vote_count: Int,
     val runtime: Int,
     val backdrop_path: String,
-    @ColumnInfo(name = "ListData")
-    @TypeConverters(GenresConverter::class)
-    val genres: List<Genre>,
+//    val genres: List<Genre>,
 //    val genre_ids: List<Int>,
     val original_title: String,
     val tagline: String
