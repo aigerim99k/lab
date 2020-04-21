@@ -3,6 +3,7 @@ package com.example.lab6.autorization
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
@@ -14,10 +15,20 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.example.lab6.Account
-
+import com.example.lab6.Movie.MovieDetailActivity
+import com.example.lab6.MovieApi
+import com.example.lab6.RetrofitService
+import com.example.lab6.json.Session
+import com.example.lab6.json.TokenResponse
+import com.example.lab6.json.Validation
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class LoginActivity : AppCompatActivity(), View.OnClickListener {
+    var session_id : String = ""
+
     private val activity: AppCompatActivity = this@LoginActivity
     private var nestedScrollView: NestedScrollView? = null
     private var textInputLayoutEmail: TextInputLayout? = null
@@ -29,6 +40,11 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     private var textViewLinkForgotPassword: AppCompatTextView? = null
     private var inputValidation: InputValidation? = null
     private var databaseHelper: DatabaseHelper? = null
+
+    lateinit var requestToken: String
+    lateinit var validation: Validation
+    lateinit var requestTokenResult : TokenResponse
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -104,5 +120,56 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     private fun emptyInputEditText() {
         textInputEditTextEmail!!.setText(null)
         textInputEditTextPassword!!.setText(null)
+    }
+
+    fun getToken(){
+        RetrofitService.getMovieApi(MovieApi::class.java).getNewToken(getString(R.string.api_key)).enqueue(object : Callback<TokenResponse>{
+            override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onResponse(call: Call<TokenResponse>, response: Response<TokenResponse>) {
+                if (response.isSuccessful){
+                    val result = response.body()
+                    if (result!=null){
+                        requestToken = result.request_token
+                        validation = Validation(textInputEditTextEmail?.text.toString(),textInputEditTextPassword?.text.toString(),requestToken)
+                        initValidation()
+                    } else {
+                        Toast.makeText(activity?.applicationContext,"TokenRequest Failure", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        })
+    }
+    fun initValidation(){
+        RetrofitService.getMovieApi(MovieApi::class.java).validation(getString(R.string.api_key), validation).enqueue(object : Callback<TokenResponse>{
+            override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onResponse(call: Call<TokenResponse>, response: Response<TokenResponse>) {
+                if (response.isSuccessful){
+                    requestTokenResult = TokenResponse(requestToken)
+                    initSession()
+                }
+                else{
+                    Toast.makeText(activity?.applicationContext,"Wrong validation", Toast.LENGTH_LONG).show()
+                }
+            }
+
+        })
+    }
+    fun initSession(){
+        RetrofitService.getMovieApi(MovieApi::class.java).createSession(getString(R.string.api_key), requestTokenResult).enqueue(object : Callback<Session>{
+            override fun onFailure(call: Call<Session>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onResponse(call: Call<Session>, response: Response<Session>) {
+
+            }
+
+        })
     }
 }
