@@ -5,7 +5,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     <TextView
-            android:id="@+id/movie_id"
+            android:id="@+id/movieId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="15sp"
@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginVertical="10dp"
-            android:layout_below="@id/movie_id">
+            android:layout_below="@id/movieId">
 
         <RelativeLayout
                 android:layout_width="match_parent"
@@ -25,7 +25,7 @@
                 >
 
             <ImageView
-                    android:id="@+id/movie_photo"
+                    android:id="@+id/moviePhoto"
                     android:layout_width="120dp"
                     android:layout_height="200dp"
                     android:layout_margin="10dp"/>
@@ -37,7 +37,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="5dp"
                     android:layout_marginTop="25dp"
-                    android:layout_toRightOf="@+id/movie_photo"
+                    android:layout_toRightOf="@+id/moviePhoto"
                     android:text="Title : "
                     android:textColor="#000"
                     android:textStyle="bold"
@@ -45,7 +45,7 @@
                     android:textSize="15sp" />
 
             <TextView
-                    android:id="@+id/RusTitle"
+                    android:id="@+id/rusTitle"
                     android:layout_below="@id/originalTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -53,13 +53,13 @@
                     android:layout_marginTop="10dp"
                     android:textColor="#000"
                     android:layout_marginRight="10dp"
-                    android:layout_toRightOf="@+id/movie_photo"
+                    android:layout_toRightOf="@+id/moviePhoto"
                     android:text="Title : "
                     android:textSize="15sp" />
 
             <TextView
-                    android:layout_below="@id/RusTitle"
-                    android:layout_toRightOf="@id/movie_photo"
+                    android:layout_below="@id/rusTitle"
+                    android:layout_toRightOf="@id/moviePhoto"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/genres"
@@ -68,8 +68,8 @@
                     android:text="боевик, фантастика"/>
 
             <TextView
-                    android:id="@+id/movie_rating"
-                    android:layout_toRightOf="@+id/movie_photo"
+                    android:id="@+id/movieRating"
+                    android:layout_toRightOf="@+id/moviePhoto"
                     android:layout_below="@+id/genres"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -78,11 +78,11 @@
                     android:text="rating"/>
 
             <TextView
-                    android:layout_toRightOf="@+id/movie_rating"
+                    android:id="@+id/movieVotes"
+                    android:layout_toRightOf="@+id/movieRating"
                     android:layout_below="@+id/genres"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/movie_votes"
                     android:textSize="15sp"
                     android:layout_margin="5dp"
                     android:text="votes"/>
@@ -91,7 +91,7 @@
                     android:id="@+id/countries"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/movie_votes"
+                    android:layout_toRightOf="@+id/movieVotes"
                     android:layout_below="@+id/genres"
                     android:layout_marginTop="11dp"
                     android:layout_marginBottom="5dp"

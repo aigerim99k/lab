@@ -26,14 +26,14 @@ interface MovieApi {
     @POST("/3/account/{account_id}/favorite")
     suspend fun markFavoriteMovieCoroutine(@Path("account_id") userId: Int,
                           @Query("api_key") key: String,
-                          @Query("session_id") session_id: String,
+                          @Query("session_id") sessionId: String,
                           @Body favoriteRequest: FavoriteRequest
     ): Response<FavoriteResponse>
 
     @GET("/3/account/{account_id}/favorite/movies")
      suspend fun getFavoriteMoviesCoroutine(@Path("account_id") userId: Int,
                           @Query("api_key") key: String,
-                          @Query("session_id") session_id: String,
+                          @Query("session_id") sessionId: String,
                           @Query("language") lang: String): Response<PopularMovies>
 
     //auth

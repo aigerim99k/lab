@@ -43,13 +43,13 @@ class MovieDetailActivity : AppCompatActivity(), CoroutineScope {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_detail)
 
-        posterImage = findViewById(R.id.moviephoto)
+        posterImage = findViewById(R.id.moviePhoto)
         titleOriginal = findViewById(R.id.originalTitle)
         genres = findViewById(R.id.genres)
         tagline = findViewById(R.id.tagline)
         countries = findViewById(R.id.countries)
         runtime = findViewById(R.id.runtime)
-        rusTitle = findViewById(R.id.RusTitle)
+        rusTitle = findViewById(R.id.rusTitle)
         overview = findViewById(R.id.overview)
         rating = findViewById(R.id.rating)
         votes = findViewById(R.id.voteCount)
@@ -59,14 +59,14 @@ class MovieDetailActivity : AppCompatActivity(), CoroutineScope {
         val movieId = intent.getIntExtra("id", 1)
         val pos = intent.getIntExtra("pos", 1)
 
-        if(flags[pos] == true){
+        if(flags[pos]){
             like.setImageResource(R.drawable.ic_lliked)
          }else{
             like.setImageResource(R.drawable.ic_like)
          }
 
         like.setOnClickListener {
-            if(flags[pos] == true){
+            if(flags[pos]){
                 like.setImageResource(R.drawable.ic_like)
                 flags[pos] = false;
                 makeUnFavoriteCoroutine(id=movieId)
@@ -92,24 +92,24 @@ class MovieDetailActivity : AppCompatActivity(), CoroutineScope {
             if(response.isSuccessful){
                 val movie = response.body()
                 Glide.with(this@MovieDetailActivity)
-                    .load("https://image.tmdb.org/t/p/w342${movie?.poster_path}")
+                    .load("https://image.tmdb.org/t/p/w342${movie?.posterPath}")
                     .into(posterImage)
                 var str: String = ""
 
                 for (i in 0..3){
-                    str += movie!!.release_date[i]
+                    str += movie!!.releaseDate[i]
                 }
 
-                titleOriginal.text = movie?.original_title + "(" + str + ")"
+                titleOriginal.text = movie?.originalTitle + "(" + str + ")"
                 genres.text = getListOfString(movie?.genres?.map { it.name }.toString().length, movie?.genres?.map { it.name }.toString())
                 tagline.text = "«" + movie?.tagline + "»"
                 rusTitle.text = movie?.title
-                countries.text = getListOfString(movie?.production_countries?.map { it.iso_3166_1 }.toString().length, movie?.production_countries?.map { it.iso_3166_1 }.toString())
+                countries.text = getListOfString(movie?.productionCountries?.map { it.iso }.toString().length, movie?.productionCountries?.map { it.iso }.toString())
                 runtime.text = movie?.runtime.toString()
                 overview.text = movie?.overview
-                rating.text = movie?.vote_average.toString()
-                votes.text = movie?.vote_count.toString()
-                ratingBar.rating = movie?.vote_average!!.toFloat()
+                rating.text = movie?.voteAverage.toString()
+                votes.text = movie?.voteCount.toString()
+                ratingBar.rating = movie?.voteAverage!!.toFloat()
             }else{
                 Toast.makeText(this@MovieDetailActivity, "ERROR", Toast.LENGTH_SHORT).show()
             }
@@ -126,8 +126,7 @@ class MovieDetailActivity : AppCompatActivity(), CoroutineScope {
     }
 
     private fun configureBackButton(){
-        val back: ImageView
-        back = findViewById(R.id.back)
+        val back: ImageView = findViewById(R.id.back)
         back.setOnClickListener {
             finish()
         }
@@ -143,7 +142,7 @@ class MovieDetailActivity : AppCompatActivity(), CoroutineScope {
                 )
             )
             if(response.isSuccessful){
-                val statMes  = response.body()?.status_message.toString()
+                val statMes  = response.body()?.statusMessage.toString()
                 Toast.makeText(
                     applicationContext,
                     statMes,
@@ -165,7 +164,7 @@ class MovieDetailActivity : AppCompatActivity(), CoroutineScope {
                 )
             )
             if(response.isSuccessful){
-                val statMes  = response.body()?.status_message.toString()
+                val statMes  = response.body()?.statusMessage.toString()
                 Toast.makeText(
                     applicationContext,
                     statMes,

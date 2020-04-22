@@ -9,10 +9,10 @@ import com.google.gson.annotations.SerializedName
 data class Result(
     @PrimaryKey
     @SerializedName("id") val id: Int = 0,
-    @SerializedName("poster_path") val poster_path: String = "",
-    @SerializedName("release_date") val release_date: String = "",
-    @SerializedName("vote_average") val vote_average: Double = 0.0,
-    @SerializedName("vote_count") val vote_count: Int = 0,
+    @SerializedName("poster_path") val posterPath: String = "",
+    @SerializedName("release_date") val releaseDate: String = "",
+    @SerializedName("vote_average") val voteAverage: Double = 0.0,
+    @SerializedName("vote_count") val voteCount: Int = 0,
     @SerializedName("title") val title: String = "",
-    @SerializedName("original_title") val original_title: String = ""
+    @SerializedName("original_title") val originalTitle: String = ""
 )

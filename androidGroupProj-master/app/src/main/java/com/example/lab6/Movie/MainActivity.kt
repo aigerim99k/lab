@@ -60,7 +60,7 @@ class MainActivity : BaseActivity(0), CoroutineScope{
                     movieDao?.getMovies() ?: emptyList()
                 }
             }
-            progress_bar.visibility = View.GONE
+            progressBar.visibility = View.GONE
             recyclerView.apply {
                 setHasFixedSize(true)
                 layoutManager = LinearLayoutManager(this@MainActivity)

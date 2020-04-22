@@ -37,30 +37,30 @@ class FavoriteAdapter(val movies: List<Result>, val context: Context): RecyclerV
 }
 
 class MoviesViewHolder(itemView : View): RecyclerView.ViewHolder(itemView){
-    private val photo: ImageView = itemView.findViewById(R.id.movie_photo)
+    private val photo: ImageView = itemView.findViewById(R.id.moviePhoto)
     private val title: TextView = itemView.findViewById(R.id.originalTitle)
-    private val rusTitle: TextView = itemView.findViewById(R.id.RusTitle)
-    private val rating: TextView = itemView.findViewById(R.id.movie_rating)
-    private val votes: TextView = itemView.findViewById(R.id.movie_votes)
-    private val movieId: TextView = itemView.findViewById(R.id.movie_id)
+    private val rusTitle: TextView = itemView.findViewById(R.id.rusTitle)
+    private val rating: TextView = itemView.findViewById(R.id.movieRating)
+    private val votes: TextView = itemView.findViewById(R.id.movieVotes)
+    private val movieId: TextView = itemView.findViewById(R.id.movieId)
     private val genres: TextView = itemView.findViewById(R.id.genres)
     private var id: Int = 0
 
     fun bind(movie: Result) {
         Glide.with(itemView.context)
-            .load("https://image.tmdb.org/t/p/w342${movie.poster_path}")
+            .load("https://image.tmdb.org/t/p/w342${movie.posterPath}")
             .into(photo)
         var str = ""
 
         for (i in 0..3){
-            str += movie.release_date[i]
+            str += movie.releaseDate[i]
         }
         id = movie.id
         movieId.text = (adapterPosition+1).toString()
         title.text = movie.title
-        rusTitle.text = movie.original_title + "("+str+")"
-        rating.text = movie.vote_average.toString()
-        votes.text = movie.vote_count.toString()
+        rusTitle.text = movie.originalTitle + "("+str+")"
+        rating.text = movie.voteAverage.toString()
+        votes.text = movie.voteCount.toString()
 
 //        genres.text = movie.genre_ids.toString()
 //        getGenres(movie.genre_ids)

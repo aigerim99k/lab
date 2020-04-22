@@ -11,15 +11,15 @@ abstract class BaseActivity(val navNumber: Int) : AppCompatActivity() {
     private val TAG = "BaseActivity"
 
     fun setupBottomNavigation() {
-        bottom_navigation_view.setIconSize(33f, 33f)
-        bottom_navigation_view.setTextVisibility(false)
-        bottom_navigation_view.enableItemShiftingMode(false)
-        bottom_navigation_view.enableShiftingMode(false)
-        bottom_navigation_view.enableAnimation(false)
-        for (i in 0 until bottom_navigation_view.menu.size()) {
-            bottom_navigation_view.setIconTintList(i, null)
+        bottomNavigationView.setIconSize(33f, 33f)
+        bottomNavigationView.setTextVisibility(false)
+        bottomNavigationView.enableItemShiftingMode(false)
+        bottomNavigationView.enableShiftingMode(false)
+        bottomNavigationView.enableAnimation(false)
+        for (i in 0 until bottomNavigationView.menu.size()) {
+            bottomNavigationView.setIconTintList(i, null)
         }
-        bottom_navigation_view.setOnNavigationItemSelectedListener {
+        bottomNavigationView.setOnNavigationItemSelectedListener {
             val nextActivity =
                 when (it.itemId) {
                     R.id.nav_item_movies -> MainActivity::class.java
@@ -40,6 +40,6 @@ abstract class BaseActivity(val navNumber: Int) : AppCompatActivity() {
                 false
             }
         }
-        bottom_navigation_view.menu.getItem(navNumber).isChecked = true
+        bottomNavigationView.menu.getItem(navNumber).isChecked = true
     }
 }
