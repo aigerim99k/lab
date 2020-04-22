@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 
 data class FavoriteRequest (
-    @SerializedName("media_type") val media_type: String,
-    @SerializedName("media_id") val media_id: Int,
+    @SerializedName("media_type") val mediaType: String,
+    @SerializedName("media_id") val mediaId: Int,
     @SerializedName("favorite") val favorite: Boolean
 )

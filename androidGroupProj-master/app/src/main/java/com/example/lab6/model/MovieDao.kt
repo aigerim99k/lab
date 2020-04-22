@@ -10,7 +10,6 @@ interface MovieDao{
     @Query("SELECT * FROM movie_table")
     fun getMovies():List<Result>
 
-
     @Query("SELECT * FROM movie_table")
     fun getFavMovies(): List<Result>
 

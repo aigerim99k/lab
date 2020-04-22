@@ -18,5 +18,5 @@ data class Validation (
 )
 
 data class Session(
-    @SerializedName("session_id") val session_id: String
+    @SerializedName("session_id") val sessionId: String
 )
