@@ -2,25 +2,17 @@ package com.example.lab6.favorite
 
 import android.os.Bundle
 import android.util.Log
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
 import com.example.lab6.BaseActivity
-import com.example.lab6.Movie.MoviesAdapter
 import com.example.lab6.MovieApi
 import com.example.lab6.R
 import com.example.lab6.RetrofitService
-import com.example.lab6.json.PopularMovies
 import kotlinx.android.synthetic.main.activity_favourite.*
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import kotlin.coroutines.CoroutineContext
 
 class Favourite : BaseActivity(1), CoroutineScope {

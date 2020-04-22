@@ -1,14 +1,13 @@
-package com.example.lab6.json
+package com.example.lab6.model
 
 import android.content.Context
 import androidx.room.*
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
+import com.example.lab6.json.GenresConverter
+import com.example.lab6.json.movie.Result
 
 
 @Database(entities = [Result::class],version = 1,exportSchema = false)
 @TypeConverters(GenresConverter::class)
-
 abstract class MovieDatabase:RoomDatabase() {
     abstract fun movieDao(): MovieDao
 

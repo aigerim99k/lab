@@ -5,29 +5,23 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.lab6.MovieApi
 import com.example.lab6.R
-import com.example.lab6.RetrofitService
-import com.example.lab6.json.Genre
-import com.example.lab6.json.Result
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.example.lab6.json.movie.Result
 
-class MoviesAdapter(val movies: List<Result>, val context: Context): RecyclerView.Adapter<MoviesViewHolder>() {
+class MoviesAdapter(var movies: List<Result>,
+                    val context: Context): RecyclerView.Adapter<MoviesViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MoviesViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.movie_item, parent, false)
         return MoviesViewHolder(view)
     }
 
-    override fun getItemCount(): Int {
-        return movies.size
-    }
+    override fun getItemCount(): Int = movies.size ?: 0
 
     override fun onBindViewHolder(holder: MoviesViewHolder, position: Int) {
         holder.itemView.setOnClickListener {
@@ -47,7 +41,6 @@ class MoviesViewHolder(itemView : View): RecyclerView.ViewHolder(itemView){
     private val rusTitle:TextView = itemView.findViewById(R.id.RusTitle)
     private val rating:TextView = itemView.findViewById(R.id.movie_rating)
     private val votes:TextView = itemView.findViewById(R.id.movie_votes)
-    private val releaseDate:TextView = itemView.findViewById(R.id.release_date)
     private val movieId:TextView = itemView.findViewById(R.id.movie_id)
     private val genres:TextView = itemView.findViewById(R.id.genres)
     private var id: Int = 0
@@ -64,10 +57,9 @@ class MoviesViewHolder(itemView : View): RecyclerView.ViewHolder(itemView){
         id = movie.id
         movieId.text = (adapterPosition+1).toString()
         title.text = movie.title
-        rusTitle.text = movie.original_title
+        rusTitle.text = movie.original_title + "("+str+")"
         rating.text = movie.vote_average.toString()
         votes.text = movie.vote_count.toString()
-        releaseDate.text = "("+str+")"
 //        genres.text = movie.genre_ids.toString()
 //        getGenres(movie.genre_ids)
     }

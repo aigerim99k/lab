@@ -41,6 +41,7 @@
                     android:text="Title : "
                     android:textColor="#000"
                     android:textStyle="bold"
+                    android:layout_marginRight="10dp"
                     android:textSize="15sp" />
 
             <TextView
@@ -51,20 +52,10 @@
                     android:layout_marginHorizontal="5dp"
                     android:layout_marginTop="10dp"
                     android:textColor="#000"
+                    android:layout_marginRight="10dp"
                     android:layout_toRightOf="@+id/movie_photo"
                     android:text="Title : "
                     android:textSize="15sp" />
-
-            <TextView
-                    android:id="@+id/release_date"
-                    android:layout_toRightOf="@+id/RusTitle"
-                    android:layout_below="@id/originalTitle"
-                    android:layout_width="wrap_content"
-                    android:textColor="#000"
-                    android:layout_marginTop="10dp"
-                    android:layout_height="wrap_content"
-                    android:textSize="15sp"
-                    android:text="ReleaseDate"/>
 
             <TextView
                     android:layout_below="@id/RusTitle"

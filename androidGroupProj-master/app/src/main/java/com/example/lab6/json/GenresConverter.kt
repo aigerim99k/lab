@@ -1,6 +1,7 @@
 package com.example.lab6.json
 import java.util.Collections.emptyList
 import androidx.room.TypeConverter
+import com.example.lab6.json.movie.Genre
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 

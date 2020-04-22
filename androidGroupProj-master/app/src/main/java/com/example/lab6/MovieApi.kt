@@ -2,9 +2,13 @@ package com.example.lab6
 
 import com.example.lab6.autorization.User
 import com.example.lab6.json.*
-import com.google.gson.JsonObject
-import okhttp3.RequestBody
-import org.json.JSONObject
+import com.example.lab6.json.favorites.FavoriteRequest
+import com.example.lab6.json.favorites.FavoriteResponse
+import com.example.lab6.json.movie.Movie
+import com.example.lab6.json.movie.PopularMovies
+import com.example.lab6.json.movie.Result
+import com.example.lab6.json.movie.Session
+import com.example.lab6.json.movie.Validation
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
@@ -12,7 +16,7 @@ import retrofit2.http.*
 interface MovieApi {
     @GET("/3/movie/popular")
     suspend fun getMovieListCoroutine(@Query("api_key") key: String,
-                                      @Query("language") lang: String) : Response<List<Result>>
+                                      @Query("language") lang: String) : Response<PopularMovies>
 
     @GET("/3/movie/{movie_id}")
     suspend fun getMovieByIdCoroutine(@Path("movie_id") movieId: Int,
@@ -23,7 +27,8 @@ interface MovieApi {
     suspend fun markFavoriteMovieCoroutine(@Path("account_id") userId: Int,
                           @Query("api_key") key: String,
                           @Query("session_id") session_id: String,
-                          @Body favoriteRequest: FavoriteRequest): Response<FavoriteResponse>
+                          @Body favoriteRequest: FavoriteRequest
+    ): Response<FavoriteResponse>
 
     @GET("/3/account/{account_id}/favorite/movies")
      suspend fun getFavoriteMoviesCoroutine(@Path("account_id") userId: Int,
@@ -39,7 +44,8 @@ interface MovieApi {
     @POST("/3/authentication/token/validate_with_login")
     fun validation(
         @Query("api_key") key: String,
-        @Body validation: Validation) : Call<TokenResponse>
+        @Body validation: Validation
+    ) : Call<TokenResponse>
     //create new session
     @POST("/3/authentication/session/new")
     fun createSession(

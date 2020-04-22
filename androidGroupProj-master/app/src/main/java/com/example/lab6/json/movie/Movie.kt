@@ -1,7 +1,5 @@
-package com.example.lab6.json
+package com.example.lab6.json.movie
 
-
-import com.google.gson.annotations.SerializedName
 
 data class Movie(
     val adult: Boolean,
