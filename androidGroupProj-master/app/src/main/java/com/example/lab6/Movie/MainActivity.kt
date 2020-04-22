@@ -1,17 +1,13 @@
 package com.example.lab6.Movie
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.lab6.*
 import com.example.lab6.model.MovieDao
 import com.example.lab6.model.MovieDatabase
-import com.example.lab6.json.movie.Result
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_movie_detail.*
 import kotlinx.coroutines.*
 import java.lang.Exception
 import kotlin.coroutines.CoroutineContext
@@ -33,7 +29,7 @@ class MainActivity : BaseActivity(0), CoroutineScope{
         setContentView(R.layout.activity_main)
         Log.d(TAG, "onCreate")
 
-        movieDao = MovieDatabase.getDatabase(context = this).movieDao()
+        movieDao = MovieDatabase.getDatabase(context = this@MainActivity).movieDao()
 
 
         setupBottomNavigation()
@@ -53,15 +49,15 @@ class MainActivity : BaseActivity(0), CoroutineScope{
                     if(response.isSuccessful) {
                         val result = response.body()!!.results
 
-                        if(result.isNullOrEmpty()){
+                        if(!result.isNullOrEmpty()){
                             movieDao?.insertAll(result)
                         }
                         result
                     }else{
-                        movieDao?.getAll() ?: emptyList()
+                        movieDao?.getMovies() ?: emptyList()
                     }
                 } catch (e: Exception){
-                    movieDao?.getAll() ?: emptyList()
+                    movieDao?.getMovies() ?: emptyList()
                 }
             }
             progress_bar.visibility = View.GONE
@@ -71,7 +67,5 @@ class MainActivity : BaseActivity(0), CoroutineScope{
                 adapter = MoviesAdapter(list, this@MainActivity)
             }
         }
-
     }
-
 }

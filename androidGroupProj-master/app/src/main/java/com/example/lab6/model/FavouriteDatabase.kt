@@ -1,14 +1,16 @@
 package com.example.lab6.model
 
 import android.content.Context
-import androidx.room.*
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.example.lab6.json.GenresConverter
 import com.example.lab6.json.movie.Result
 
-
 @Database(entities = [Result::class],version = 1,exportSchema = false)
 @TypeConverters(GenresConverter::class)
-abstract class MovieDatabase:RoomDatabase() {
+abstract class FavouriteDatabase : RoomDatabase(){
     abstract fun movieDao(): MovieDao
 
     companion object {
@@ -19,13 +21,10 @@ abstract class MovieDatabase:RoomDatabase() {
             if (INSTANCE == null) {
                 INSTANCE = Room.databaseBuilder(
                     context.applicationContext,
-                    MovieDatabase::class.java, "app_database.db"
+                    MovieDatabase::class.java, "fav_database.db"
                 ).build()
             }
             return INSTANCE!!
         }
     }
-
-
-
 }

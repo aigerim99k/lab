@@ -8,6 +8,11 @@ interface MovieDao{
     fun insertAll(list: List<Result>)
 
     @Query("SELECT * FROM movie_table")
-    fun getAll(): List<Result>
+    fun getMovies():List<Result>
+
+
+    @Query("SELECT * FROM movie_table")
+    fun getFavMovies(): List<Result>
+
 }
 

@@ -3,7 +3,7 @@ package com.example.lab6.json.movie
 import com.google.gson.annotations.SerializedName
 
 data class PopularMovies(
-    val results: List<Result>
+    @SerializedName("results") val results: List<Result>
 )
 
 data class Genre(
@@ -20,4 +20,3 @@ data class Validation (
 data class Session(
     @SerializedName("session_id") val session_id: String
 )
-
