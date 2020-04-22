@@ -15,12 +15,11 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.example.lab6.Account
-import com.example.lab6.Movie.MovieDetailActivity
 import com.example.lab6.MovieApi
 import com.example.lab6.RetrofitService
-import com.example.lab6.json.Session
+import com.example.lab6.json.movie.Session
 import com.example.lab6.json.TokenResponse
-import com.example.lab6.json.Validation
+import com.example.lab6.json.movie.Validation
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -133,7 +132,11 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                     val result = response.body()
                     if (result!=null){
                         requestToken = result.request_token
-                        validation = Validation(textInputEditTextEmail?.text.toString(),textInputEditTextPassword?.text.toString(),requestToken)
+                        validation = Validation(
+                            textInputEditTextEmail?.text.toString(),
+                            textInputEditTextPassword?.text.toString(),
+                            requestToken
+                        )
                         initValidation()
                     } else {
                         Toast.makeText(activity?.applicationContext,"TokenRequest Failure", Toast.LENGTH_LONG).show()

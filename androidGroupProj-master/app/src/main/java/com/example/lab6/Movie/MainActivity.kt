@@ -3,27 +3,22 @@ package com.example.lab6.Movie
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.lab6.*
-import com.example.lab6.json.Genre
-import com.example.lab6.json.PopularMovies
+import com.example.lab6.model.MovieDao
+import com.example.lab6.model.MovieDatabase
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.*
+import java.lang.Exception
 import kotlin.coroutines.CoroutineContext
 
 val flags = arrayOf(false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false)
 
-class MainActivity : BaseActivity(0), CoroutineScope {
+class MainActivity : BaseActivity(0), CoroutineScope{
     private val TAG = "MainActivity"
-
     private val job = Job()
+
+    private var movieDao: MovieDao? = null
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
@@ -32,11 +27,12 @@ class MainActivity : BaseActivity(0), CoroutineScope {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         Log.d(TAG, "onCreate")
 
-        setupBottomNavigation()
+        movieDao = MovieDatabase.getDatabase(context = this@MainActivity).movieDao()
 
+
+        setupBottomNavigation()
         getMoviesCoroutine()
     }
 
@@ -45,21 +41,31 @@ class MainActivity : BaseActivity(0), CoroutineScope {
         job.cancel()
     }
 
-    private fun getMoviesCoroutine(){
+    private fun getMoviesCoroutine() {
         launch {
-            val response = RetrofitService.getMovieApi(MovieApi::class.java).getMovieListCoroutine(getString(R.string.api_key), "ru")
-            if(response.isSuccessful){
-                progress_bar.visibility = View.GONE
-                recyclerView.apply {
-                    setHasFixedSize(true)
-                    layoutManager = LinearLayoutManager(this@MainActivity)
-                    adapter = MoviesAdapter(response.body()!!.results, this@MainActivity)
+            val list = withContext(Dispatchers.IO){
+                try {
+                    val response = RetrofitService.getMovieApi(MovieApi::class.java).getMovieListCoroutine(getString(R.string.api_key), "ru")
+                    if(response.isSuccessful) {
+                        val result = response.body()!!.results
+
+                        if(!result.isNullOrEmpty()){
+                            movieDao?.insertAll(result)
+                        }
+                        result
+                    }else{
+                        movieDao?.getMovies() ?: emptyList()
+                    }
+                } catch (e: Exception){
+                    movieDao?.getMovies() ?: emptyList()
                 }
-            }else{
-                Toast.makeText(this@MainActivity, "Error", Toast.LENGTH_SHORT).show()
+            }
+            progress_bar.visibility = View.GONE
+            recyclerView.apply {
+                setHasFixedSize(true)
+                layoutManager = LinearLayoutManager(this@MainActivity)
+                adapter = MoviesAdapter(list, this@MainActivity)
             }
         }
     }
-
 }
-

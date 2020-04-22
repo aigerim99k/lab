@@ -10,23 +10,11 @@ import com.bumptech.glide.Glide
 import com.example.lab6.MovieApi
 import com.example.lab6.R
 import com.example.lab6.RetrofitService
-import com.example.lab6.json.FavoriteRequest
-import com.example.lab6.json.FavoriteResponse
-import com.example.lab6.json.Result
-import com.google.gson.Gson
-import com.google.gson.JsonObject
+import com.example.lab6.json.favorites.FavoriteRequest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.Request
-import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
-import org.json.JSONObject
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import kotlin.coroutines.CoroutineContext
 
 
@@ -57,7 +45,6 @@ class MovieDetailActivity : AppCompatActivity(), CoroutineScope {
 
         posterImage = findViewById(R.id.moviephoto)
         titleOriginal = findViewById(R.id.originalTitle)
-        release = findViewById(R.id.movieRelease)
         genres = findViewById(R.id.genres)
         tagline = findViewById(R.id.tagline)
         countries = findViewById(R.id.countries)
@@ -113,9 +100,7 @@ class MovieDetailActivity : AppCompatActivity(), CoroutineScope {
                     str += movie!!.release_date[i]
                 }
 
-                titleOriginal.text = movie?.original_title
-
-                release.text = "(" + str + ")"
+                titleOriginal.text = movie?.original_title + "(" + str + ")"
                 genres.text = getListOfString(movie?.genres?.map { it.name }.toString().length, movie?.genres?.map { it.name }.toString())
                 tagline.text = "«" + movie?.tagline + "»"
                 rusTitle.text = movie?.title
@@ -150,7 +135,13 @@ class MovieDetailActivity : AppCompatActivity(), CoroutineScope {
 
     private fun makeFavoriteCoroutine(id: Int){
         launch {
-            val response = RetrofitService.getMovieApi(MovieApi::class.java).markFavoriteMovieCoroutine(1, getString(R.string.api_key), "1d7900c966a3965dad207c6bd12abf21877b237d", FavoriteRequest("movie", id, true))
+            val response = RetrofitService.getMovieApi(MovieApi::class.java).markFavoriteMovieCoroutine(1, getString(R.string.api_key), "1d7900c966a3965dad207c6bd12abf21877b237d",
+                FavoriteRequest(
+                    "movie",
+                    id,
+                    true
+                )
+            )
             if(response.isSuccessful){
                 val statMes  = response.body()?.status_message.toString()
                 Toast.makeText(
@@ -166,7 +157,13 @@ class MovieDetailActivity : AppCompatActivity(), CoroutineScope {
 
     private fun makeUnFavoriteCoroutine(id: Int){
         launch {
-            val response = RetrofitService.getMovieApi(MovieApi::class.java).markFavoriteMovieCoroutine(1, getString(R.string.api_key), "1d7900c966a3965dad207c6bd12abf21877b237d", FavoriteRequest("movie", id, false))
+            val response = RetrofitService.getMovieApi(MovieApi::class.java).markFavoriteMovieCoroutine(1, getString(R.string.api_key), "1d7900c966a3965dad207c6bd12abf21877b237d",
+                FavoriteRequest(
+                    "movie",
+                    id,
+                    false
+                )
+            )
             if(response.isSuccessful){
                 val statMes  = response.body()?.status_message.toString()
                 Toast.makeText(
