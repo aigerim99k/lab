@@ -25,8 +25,6 @@ class Account : BaseActivity(2) {
         logout = findViewById(R.id.logout)
         textViewName = findViewById<View>(R.id.profileText) as TextView
 
-
-
         val intent = intent
         if (intent.hasExtra("EMAIL")) {
             val nameFromIntent = getIntent().getStringExtra("EMAIL")

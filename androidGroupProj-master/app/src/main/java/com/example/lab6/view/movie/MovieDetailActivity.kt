@@ -57,33 +57,11 @@ class MovieDetailActivity : AppCompatActivity(), CoroutineScope {
         like = findViewById(R.id.like)
 
         val movieId = intent.getIntExtra("id", 1)
-        val pos = intent.getIntExtra("pos", 1)
 
-        if(flags[pos]){
-            like.setImageResource(R.drawable.ic_lliked)
-         }else{
-            like.setImageResource(R.drawable.ic_like)
-         }
-
-        like.setOnClickListener {
-            if(flags[pos]){
-                like.setImageResource(R.drawable.ic_like)
-                flags[pos] = false;
-                makeUnFavoriteCoroutine(id=movieId)
-            }else{
-                like.setImageResource(R.drawable.ic_lliked)
-                flags[pos] = true;
-                makeFavoriteCoroutine(id=movieId);
-            }
-        }
+        setLikes(movieId)
 
         configureBackButton()
         getMovieCoroutine(id=movieId)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        job.cancel()
     }
 
     private fun getMovieCoroutine(id: Int){
@@ -118,6 +96,68 @@ class MovieDetailActivity : AppCompatActivity(), CoroutineScope {
         }
     }
 
+    private fun makeFavoriteCoroutine(id: Int, favorite: Boolean){
+        launch {
+            val response = RetrofitService.getMovieApi(
+                MovieApi::class.java).markFavoriteMovieCoroutine(1, getString(R.string.api_key), "1d7900c966a3965dad207c6bd12abf21877b237d",
+                FavoriteRequest(
+                    "movie",
+                    id,
+                    favorite
+                )
+            )
+            if(response.isSuccessful){
+                val statMes  = response.body()?.statusMessage.toString()
+                Toast.makeText(
+                    applicationContext,
+                    statMes,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }else{
+                Toast.makeText(this@MovieDetailActivity, "Error", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun setLikes(id: Int) {
+        launch {
+            val response = RetrofitService.getMovieApi(MovieApi::class.java)
+                .getFavoriteMoviesCoroutine(
+                    1,
+                    getString(R.string.api_key),
+                    "1d7900c966a3965dad207c6bd12abf21877b237d",
+                    "rus"
+                )
+            val movies = response.body()!!.results.map { it.id }
+            var isFav = false
+            for(i in 0..movies.size-1){
+                isFav = id == movies[i]
+            }
+            if(isFav){
+                like.setImageResource(R.drawable.ic_lliked)
+            }else{
+                like.setImageResource(R.drawable.ic_like)
+            }
+            like.setOnClickListener {
+                if(isFav){
+                    like.setImageResource(R.drawable.ic_like)
+                    isFav = false;
+                    makeFavoriteCoroutine(id = id, favorite = false)
+                }else{
+                    like.setImageResource(R.drawable.ic_lliked)
+                    isFav = true;
+                    makeFavoriteCoroutine(id = id, favorite = true);
+                }
+            }
+
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        job.cancel()
+    }
+
     private fun getListOfString(len: Int, s: String): String {
         var str: String = ""
         for (i in 1..len-2) {
@@ -130,52 +170,6 @@ class MovieDetailActivity : AppCompatActivity(), CoroutineScope {
         val back: ImageView = findViewById(R.id.back)
         back.setOnClickListener {
             finish()
-        }
-    }
-
-    private fun makeFavoriteCoroutine(id: Int){
-        launch {
-            val response = RetrofitService.getMovieApi(
-                MovieApi::class.java).markFavoriteMovieCoroutine(1, getString(R.string.api_key), "1d7900c966a3965dad207c6bd12abf21877b237d",
-                FavoriteRequest(
-                    "movie",
-                    id,
-                    true
-                )
-            )
-            if(response.isSuccessful){
-                val statMes  = response.body()?.statusMessage.toString()
-                Toast.makeText(
-                    applicationContext,
-                    statMes,
-                    Toast.LENGTH_SHORT
-                ).show()
-            }else{
-                Toast.makeText(this@MovieDetailActivity, "Error", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-    private fun makeUnFavoriteCoroutine(id: Int){
-        launch {
-            val response = RetrofitService.getMovieApi(
-                MovieApi::class.java).markFavoriteMovieCoroutine(1, getString(R.string.api_key), "1d7900c966a3965dad207c6bd12abf21877b237d",
-                FavoriteRequest(
-                    "movie",
-                    id,
-                    false
-                )
-            )
-            if(response.isSuccessful){
-                val statMes  = response.body()?.statusMessage.toString()
-                Toast.makeText(
-                    applicationContext,
-                    statMes,
-                    Toast.LENGTH_SHORT
-                ).show()
-            }else{
-                Toast.makeText(this@MovieDetailActivity, "Error", Toast.LENGTH_SHORT).show()
-            }
         }
     }
 
