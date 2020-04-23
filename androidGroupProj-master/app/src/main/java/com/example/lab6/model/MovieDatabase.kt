@@ -2,8 +2,8 @@ package com.example.lab6.model
 
 import android.content.Context
 import androidx.room.*
-import com.example.lab6.json.GenresConverter
-import com.example.lab6.json.movie.Result
+import com.example.lab6.model.json.GenresConverter
+import com.example.lab6.model.json.movie.Result
 
 
 @Database(entities = [Result::class],version = 1,exportSchema = false)

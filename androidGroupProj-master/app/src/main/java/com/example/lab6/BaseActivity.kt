@@ -3,8 +3,9 @@ package com.example.lab6
 import android.content.Intent
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.example.lab6.Movie.MainActivity
-import com.example.lab6.favorite.Favourite
+import com.example.lab6.view.movie.MainActivity
+import com.example.lab6.view.favorite.Favourite
+import com.example.lab6.view.Account
 import kotlinx.android.synthetic.main.bottom_nav.*
 
 abstract class BaseActivity(val navNumber: Int) : AppCompatActivity() {

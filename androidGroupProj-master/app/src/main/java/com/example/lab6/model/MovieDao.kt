@@ -1,6 +1,6 @@
 package com.example.lab6.model
 import androidx.room.*
-import com.example.lab6.json.movie.Result
+import com.example.lab6.model.json.movie.Result
 
 @Dao
 interface MovieDao{

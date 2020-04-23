@@ -5,8 +5,8 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.example.lab6.json.GenresConverter
-import com.example.lab6.json.movie.Result
+import com.example.lab6.model.json.GenresConverter
+import com.example.lab6.model.json.movie.Result
 
 @Database(entities = [Result::class],version = 1,exportSchema = false)
 @TypeConverters(GenresConverter::class)
