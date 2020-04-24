@@ -6,6 +6,7 @@ import com.example.lab6.model.json.favorites.FavoriteRequest
 import com.example.lab6.model.json.favorites.FavoriteResponse
 import com.example.lab6.model.json.movie.Movie
 import com.example.lab6.model.json.movie.PopularMovies
+import com.example.lab6.model.json.movie.Result
 import com.example.lab6.model.json.movie.Session
 import com.example.lab6.model.json.movie.Validation
 import retrofit2.Call
@@ -20,7 +21,7 @@ interface MovieApi {
     @GET("/3/movie/{movie_id}")
     suspend fun getMovieByIdCoroutine(@Path("movie_id") movieId: Int,
                               @Query("api_key") key: String,
-                              @Query("language") lang: String) : Response<Movie>
+                              @Query("language") lang: String) : Response<Result>
 
     @POST("/3/account/{account_id}/favorite")
     suspend fun markFavoriteMovieCoroutine(@Path("account_id") userId: Int,

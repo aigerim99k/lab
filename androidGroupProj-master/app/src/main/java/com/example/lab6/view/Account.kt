@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
-import com.example.lab6.BaseActivity
 import com.example.lab6.R
 import com.example.lab6.view.autorization.LoginActivity
 import com.example.lab6.view.autorization.PreferenceUtils

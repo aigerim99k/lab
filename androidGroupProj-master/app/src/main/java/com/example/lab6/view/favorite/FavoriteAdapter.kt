@@ -34,6 +34,11 @@ class FavoriteAdapter(val movies: List<Result>, val context: Context): RecyclerV
         }
         return holder.bind(movies[position])
     }
+
+    fun clearAll() {
+        (movies as? ArrayList<Result>)?.clear()
+        notifyDataSetChanged()
+    }
 }
 
 class MoviesViewHolder(itemView : View): RecyclerView.ViewHolder(itemView){

@@ -2,28 +2,25 @@ package com.example.lab6.view.favorite
 
 import android.os.Bundle
 import android.util.Log
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.lab6.BaseActivity
-import com.example.lab6.model.MovieApi
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.example.lab6.view.BaseActivity
 import com.example.lab6.R
-import com.example.lab6.model.RetrofitService
-import com.example.lab6.model.FavouriteDatabase
-import com.example.lab6.model.MovieDao
-import kotlinx.android.synthetic.main.activity_favourite.*
-import kotlinx.coroutines.*
-import java.lang.Exception
-import kotlin.coroutines.CoroutineContext
+import com.example.lab6.view.movie.MoviesAdapter
+import com.example.lab6.view_model.FavoriteListViewModel
+import com.example.lab6.view_model.ViewModelProviderFactory
 
-class Favourite : BaseActivity(1), CoroutineScope {
+class Favourite : BaseActivity(1){
 
     private val TAG = "FavouriteActivity"
 
-    private val job = Job()
-
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main + job
-
-    private var movieDao: MovieDao? = null
+    lateinit var swipeRefreshLayoutFav: SwipeRefreshLayout
+    lateinit var recyclerViewFav: RecyclerView
+    private lateinit var favoriteListViewModel: FavoriteListViewModel
+    private var favoriteAdapter: FavoriteAdapter?= null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,47 +28,42 @@ class Favourite : BaseActivity(1), CoroutineScope {
         Log.d(TAG, "onCreate")
         setupBottomNavigation()
 
-        movieDao = FavouriteDatabase.getDatabase(context = this@Favourite).movieDao()
+        swipeRefreshLayoutFav = findViewById(R.id.swipeRefreshLayoutFav)
+        recyclerViewFav = findViewById(R.id.recyclerViewFav)
 
-
+        swipeRefresh()
         getFavMovieCoroutine()
     }
 
-    fun getFavMovieCoroutine(){
-        launch {
-            val list = withContext(Dispatchers.IO) {
-                try {
-                    val response = RetrofitService.getMovieApi(MovieApi::class.java)
-                        .getFavoriteMoviesCoroutine(
-                            1,
-                            getString(R.string.api_key),
-                            "1d7900c966a3965dad207c6bd12abf21877b237d",
-                            "rus"
-                        )
-                    if(response.isSuccessful) {
-                        val result = response.body()!!.results
-
-                        if(!result.isNullOrEmpty()){
-                            movieDao?.insertAll(result)
-                        }
-                        result
-                    }else{
-                        movieDao?.getMovies() ?: emptyList()
-                    }
-                } catch (e: Exception){
-                    movieDao?.getMovies() ?: emptyList()
-                }
-            }
-            recyclerViewFav.apply {
-                setHasFixedSize(true)
-                layoutManager = LinearLayoutManager(this@Favourite)
-                adapter = FavoriteAdapter(list, this@Favourite)
-            }
+    fun swipeRefresh(){
+        recyclerViewFav.layoutManager = LinearLayoutManager(this)
+        swipeRefreshLayoutFav.setOnRefreshListener {
+            favoriteAdapter?.clearAll()
+            favoriteListViewModel.getFavorites()
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        job.cancel()
+    fun getFavMovieCoroutine(){
+        val viewModelProviderFactory = ViewModelProviderFactory(context = this@Favourite)
+        favoriteListViewModel = ViewModelProvider(this@Favourite, viewModelProviderFactory).get(FavoriteListViewModel::class.java)
+
+        favoriteListViewModel.getFavorites()
+        favoriteListViewModel.liveData.observe(this@Favourite, Observer { result ->
+            when(result) {
+                is FavoriteListViewModel.State.ShowLoading -> {
+                    swipeRefreshLayoutFav.isRefreshing = true
+                }
+                is FavoriteListViewModel.State.HideLoading -> {
+                    swipeRefreshLayoutFav.isRefreshing = false
+                }
+                is FavoriteListViewModel.State.Result -> {
+                    recyclerViewFav.apply {
+                        setHasFixedSize(true)
+                        layoutManager = LinearLayoutManager(this@Favourite)
+                        adapter = MoviesAdapter(result.list, this@Favourite)
+                    }
+                }
+            }
+        })
     }
 }
