@@ -1,18 +1,13 @@
 package com.example.lab6.view_model
 
 import android.content.Context
-import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.lab6.R
+import com.example.lab6.BuildConfig
 import com.example.lab6.model.MovieApi
-import com.example.lab6.model.MovieDao
-import com.example.lab6.model.MovieDatabase
+import com.example.lab6.model.json.database.MovieDao
+import com.example.lab6.model.json.database.MovieDatabase
 import com.example.lab6.model.RetrofitService
-import com.example.lab6.model.json.movie.Result
-import com.example.lab6.view.movie.MoviesAdapter
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 import java.lang.Exception
 import kotlin.coroutines.CoroutineContext
@@ -44,7 +39,7 @@ class MovieListViewModel(
             liveData.value = State.ShowLoading
             val list = withContext(Dispatchers.IO){
                 try {
-                    val response = RetrofitService.getMovieApi(MovieApi::class.java).getMovieListCoroutine("8903dbd0a0cd67d1981d5ee41688dc11", "ru")
+                    val response = RetrofitService.getMovieApi(MovieApi::class.java).getMovieListCoroutine(BuildConfig.API_KEY, "ru")
                     if(response.isSuccessful) {
                         val result = response.body()!!.results
                         if(!result.isNullOrEmpty()){

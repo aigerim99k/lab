@@ -20,6 +20,8 @@ data class Result(
     @SerializedName("runtime") var runtime: Int ?= null,
     @SerializedName("tagline") var tagline: String ?= null,
 
+    var liked: Int? = 0,
+
     @Ignore var genres: List<Genre> ?= null,
     @Ignore var productionCountries: List<ProductionCountryX> ?= null
 )

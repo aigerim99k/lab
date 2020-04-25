@@ -9,6 +9,7 @@ import com.example.lab6.model.json.movie.PopularMovies
 import com.example.lab6.model.json.movie.Result
 import com.example.lab6.model.json.movie.Session
 import com.example.lab6.model.json.movie.Validation
+import com.google.gson.JsonObject
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
@@ -27,8 +28,14 @@ interface MovieApi {
     suspend fun markFavoriteMovieCoroutine(@Path("account_id") userId: Int,
                           @Query("api_key") key: String,
                           @Query("session_id") sessionId: String,
-                          @Body favoriteRequest: FavoriteRequest
-    ): Response<FavoriteResponse>
+                          @Body favoriteRequest: JsonObject): Response<JsonObject>
+
+    @GET("movie/{movie_id}/account_states")
+    suspend fun hasLikeCoroutine(
+        @Path("movie_id") movieId: Int?,
+        @Query("api_key") apiKey: String,
+        @Query("session_id") sessionId: String?
+    ): Response<JsonObject>
 
     @GET("/3/account/{account_id}/favorite/movies")
      suspend fun getFavoriteMoviesCoroutine(@Path("account_id") userId: Int,

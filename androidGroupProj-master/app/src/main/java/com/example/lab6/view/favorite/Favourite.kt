@@ -60,7 +60,7 @@ class Favourite : BaseActivity(1){
                     recyclerViewFav.apply {
                         setHasFixedSize(true)
                         layoutManager = LinearLayoutManager(this@Favourite)
-                        adapter = MoviesAdapter(result.list, this@Favourite)
+                        adapter = MoviesAdapter(result.list!!, this@Favourite)
                     }
                 }
             }

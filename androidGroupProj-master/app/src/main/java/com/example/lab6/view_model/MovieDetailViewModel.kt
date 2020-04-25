@@ -1,17 +1,19 @@
 package com.example.lab6.view_model
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.lab6.R
+import com.example.lab6.BuildConfig
 import com.example.lab6.model.MovieApi
-import com.example.lab6.model.MovieDao
-import com.example.lab6.model.MovieDatabase
+import com.example.lab6.model.json.database.MovieDao
+import com.example.lab6.model.json.database.MovieDatabase
 import com.example.lab6.model.RetrofitService
-import com.example.lab6.model.json.favorites.FavoriteRequest
+import com.example.lab6.model.json.favorites.FavResponse
 import com.example.lab6.model.json.movie.Result
-import com.example.lab6.view.movie.isFav
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 import kotlinx.coroutines.*
 import java.lang.Exception
 import kotlin.coroutines.CoroutineContext
@@ -31,7 +33,7 @@ class MovieDetailViewModel(
         movieDao = MovieDatabase.getDatabase(context = context).movieDao()
     }
 
-    val liveData = MutableLiveData<Result>()
+    val liveData = MutableLiveData<State>()
 
     override fun onCleared() {
         super.onCleared()
@@ -44,7 +46,7 @@ class MovieDetailViewModel(
                 try {
                     val response = RetrofitService.getMovieApi(
                         MovieApi::class.java
-                    ).getMovieByIdCoroutine(id, "8903dbd0a0cd67d1981d5ee41688dc11", "ru")
+                    ).getMovieByIdCoroutine(id, BuildConfig.API_KEY, "ru")
 
                     if(response.isSuccessful) {
                         val result = response.body()
@@ -60,52 +62,80 @@ class MovieDetailViewModel(
                     movieDao.getMovieById(id)
                 }
             }
-            liveData.value = movieDetail
+            liveData.value = State.Movie(movieDetail)
         }
     }
 
-    fun markFavorite(id: Int, favorite: Boolean) {
+    fun haslike(movieId: Int?) {
         launch {
-           try {
-                val response = RetrofitService.getMovieApi(
-                    MovieApi::class.java
-                ).markFavoriteMovieCoroutine(
-                    1, "8903dbd0a0cd67d1981d5ee41688dc11", "1d7900c966a3965dad207c6bd12abf21877b237d",
-                    FavoriteRequest(
-                        "movie",
-                        id,
-                        favorite
-                    )
-                )
-                if(response.isSuccessful){
-                    val statMes = response.body()?.statusMessage.toString()
-                    Toast.makeText(
-                        context,
-                        statMes,
-                        Toast.LENGTH_SHORT
-                    ).show()
+            val likeInt = withContext(Dispatchers.IO) {
+                try {
+                    val response = RetrofitService.getMovieApi(MovieApi::class.java)
+                        .hasLikeCoroutine(
+                            movieId,
+                            BuildConfig.API_KEY,
+                            "1d7900c966a3965dad207c6bd12abf21877b237d"
+                        )
+                    Log.d("TAG", response.toString())
+                    if (response.isSuccessful) {
+                        val gson = Gson()
+                        val like = gson.fromJson(
+                            response.body(),
+                            FavResponse::class.java
+                        ).favorite
+                        if (like)
+                            1
+                        else 0
+                    } else {
+                        movieDao?.getLiked(movieId) ?: 0
+                    }
+                } catch (e: Exception) {
+                    movieDao?.getLiked(movieId) ?: 0
                 }
-            } catch (e: Exception) {
-
             }
+            liveData.value = State.Result(likeInt)
         }
     }
 
-    fun setLikes(id: Int){
+    fun likeMovie(favourite: Boolean, movie: Result?, movieId: Int?) {
         launch {
-            val response = RetrofitService.getMovieApi(MovieApi::class.java)
-                .getFavoriteMoviesCoroutine(
-                    1,
-                    "8903dbd0a0cd67d1981d5ee41688dc11",
-                    "1d7900c966a3965dad207c6bd12abf21877b237d",
-                    "rus"
-                )
-
-            val movies = response.body()!!.results.map { it.id }
-            for(i in 0..movies.size-1) {
-                isFav = id == movies[i]
+            val body = JsonObject().apply {
+                addProperty("media_type", "movie")
+                addProperty("media_id", movieId)
+                addProperty("favorite", favourite)
+            }
+            try {
+                RetrofitService.getMovieApi(MovieApi::class.java)
+                    .markFavoriteMovieCoroutine(
+                        1,
+                        BuildConfig.API_KEY, "1d7900c966a3965dad207c6bd12abf21877b237d", body)
+            } catch (e: Exception) { }
+            if (favourite) {
+                movie?.liked = 11
+                if (movie != null) {
+                    movieDao?.insert(movie)
+                }
+                Toast.makeText(
+                    context,
+                    "Movie has been added to favourites",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                movie?.liked = 10
+                if (movie != null) {
+                    movieDao?.insert(movie)
+                }
+                Toast.makeText(
+                    context,
+                    "Movie has been removed from favourites",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
 
+    sealed class State {
+        data class Movie(val movie: com.example.lab6.model.json.movie.Result?) : State()
+        data class Result(val likeInt: Int?) : State()
+    }
 }

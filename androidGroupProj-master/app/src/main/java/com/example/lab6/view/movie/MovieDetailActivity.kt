@@ -1,28 +1,18 @@
 package com.example.lab6.view.movie
 
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
-import com.example.lab6.model.MovieApi
 import com.example.lab6.R
-import com.example.lab6.model.MovieDao
-import com.example.lab6.model.MovieDatabase
-import com.example.lab6.model.RetrofitService
-import com.example.lab6.model.json.favorites.FavoriteRequest
 import com.example.lab6.model.json.movie.Result
 import com.example.lab6.view_model.MovieDetailViewModel
 import com.example.lab6.view_model.ViewModelProviderFactory
-import kotlinx.coroutines.*
-import java.lang.Exception
-import kotlin.coroutines.CoroutineContext
-
-var isFav = false
 
 class MovieDetailActivity : AppCompatActivity(){
 
@@ -40,6 +30,9 @@ class MovieDetailActivity : AppCompatActivity(){
     lateinit var ratingBar: RatingBar
     lateinit var like: ImageView
 
+    private var movie: Result? = null
+    private var movieId: Int? = null
+
     private lateinit var movieDetailsViewModel: MovieDetailViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,11 +41,10 @@ class MovieDetailActivity : AppCompatActivity(){
 
         bindViews()
 
-        val movieId = intent.getIntExtra("id", 1)
+        movieId = intent.getIntExtra("id", 1)
 
         configureBackButton()
-        getMovieCoroutine(id=movieId)
-        setLikes(movieId)
+        getMovieCoroutine(id= movieId!!)
     }
 
     private fun getMovieCoroutine(id: Int){
@@ -62,17 +54,28 @@ class MovieDetailActivity : AppCompatActivity(){
 
         movieDetailsViewModel.getMovie(id)
         movieDetailsViewModel.liveData.observe(this, Observer { result ->
-            setData(result)
+            when(result){
+                is MovieDetailViewModel.State.Movie -> {
+                    setData(result.movie!!)
+                    movie = result.movie
+                }
+                is MovieDetailViewModel.State.Result -> {
+                    if (result.likeInt == 1 || result.likeInt == 11) {
+                        like.setImageResource(R.drawable.ic_lliked)
+                    } else {
+                        like.setImageResource(R.drawable.ic_like)
+                    }
+                }
+            }
         })
     }
 
-    private fun makeFavoriteCoroutine(id: Int, favorite: Boolean){
-        movieDetailsViewModel.markFavorite(id, favorite)
+    private fun hasLike(id: Int) {
+        movieDetailsViewModel.haslike(id)
     }
 
-    private fun setLikes(id: Int) {
-        movieDetailsViewModel.setLikes(id)
-        setBool(id)
+    private fun likeMovie(favourite: Boolean) {
+        movieDetailsViewModel.likeMovie(favourite, movie, movieId)
     }
 
     private fun setData(movie: Result) {
@@ -95,23 +98,17 @@ class MovieDetailActivity : AppCompatActivity(){
         rating.text = movie.voteAverage.toString()
         votes.text = movie.voteCount.toString()
         ratingBar.rating = movie.voteAverage.toFloat()
-    }
 
-    private fun setBool(id: Int){
-        if(isFav){
-            like.setImageResource(R.drawable.ic_lliked)
-        }else{
-            like.setImageResource(R.drawable.ic_like)
-        }
+        hasLike(movie.id)
+
         like.setOnClickListener {
-            if(isFav){
-                like.setImageResource(R.drawable.ic_like)
-                isFav = false;
-                makeFavoriteCoroutine(id = id, favorite = false)
-            }else{
+            val drawable: Drawable = like.drawable
+            if( drawable.constantState?.equals(getDrawable(R.drawable.ic_like)?.constantState) == true ){
                 like.setImageResource(R.drawable.ic_lliked)
-                isFav = true;
-                makeFavoriteCoroutine(id = id, favorite = true);
+                likeMovie(true)
+            }else{
+                like.setImageResource(R.drawable.ic_like)
+                likeMovie(false)
             }
         }
     }
