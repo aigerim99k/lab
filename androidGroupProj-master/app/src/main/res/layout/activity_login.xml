@@ -6,7 +6,7 @@
         android:layout_height="match_parent"
         android:background="#FFFFFF"
         android:padding="20dp"
-        tools:context=".autorization.LoginActivity">
+        tools:context=".view.autorization.LoginActivity">
 
     <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
