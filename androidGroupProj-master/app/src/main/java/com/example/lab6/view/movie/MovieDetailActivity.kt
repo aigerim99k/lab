@@ -49,8 +49,7 @@ class MovieDetailActivity : AppCompatActivity(){
 
     private fun getMovieCoroutine(id: Int){
         val viewModelProviderFactory = ViewModelProviderFactory(context = this@MovieDetailActivity)
-        movieDetailsViewModel =
-            ViewModelProvider(this, viewModelProviderFactory).get(MovieDetailViewModel::class.java)
+        movieDetailsViewModel = ViewModelProvider(this, viewModelProviderFactory).get(MovieDetailViewModel::class.java)
 
         movieDetailsViewModel.getMovie(id)
         movieDetailsViewModel.liveData.observe(this, Observer { result ->

@@ -1,4 +1,4 @@
-package com.example.lab6.model.json.database
+package com.example.lab6.model.database
 
 import android.content.Context
 import androidx.room.*

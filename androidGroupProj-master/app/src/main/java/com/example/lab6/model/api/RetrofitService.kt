@@ -1,12 +1,8 @@
- package com.example.lab6.model
+ package com.example.lab6.model.api
 
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-
- //https://api.themoviedb.org/3/movie/popular?api_key=8903dbd0a0cd67d1981d5ee41688dc11 - list of movies
- //https://api.themoviedb.org/3/movie/550?api_key=8903dbd0a0cd67d1981d5ee41688dc11 - single movie
- //https://image.tmdb.org/t/p/w342/4GpwvwDjgwiShr1UBJIn5fk1gwT.jpg - poster path
 
  object RetrofitService
 {
@@ -23,4 +19,5 @@ import retrofit2.converter.gson.GsonConverterFactory
     fun<T> getMovieApi(service: Class<T>): T{
         return retrofit.create(service)
     }
+
 }

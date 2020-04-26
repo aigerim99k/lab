@@ -4,6 +4,7 @@ import android.content.Intent
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.lab6.R
+import com.example.lab6.view.autorization.Account
 import com.example.lab6.view.movie.MainActivity
 import com.example.lab6.view.favorite.Favourite
 import kotlinx.android.synthetic.main.bottom_nav.*

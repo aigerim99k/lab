@@ -12,7 +12,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
-class RegisterActivity : AppCompatActivity(), View.OnClickListener {
+class RegisterActivity : AppCompatActivity() {
     private val activity: AppCompatActivity = this@RegisterActivity
     private var ScrollView: ScrollView? = null
     private var textInputLayoutName: TextInputLayout? = null
@@ -25,16 +25,15 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
     private var textInputEditTextConfirmPassword: TextInputEditText? = null
     private var appCompatButtonRegister: AppCompatButton? = null
     private var appCompatTextViewLoginLink: AppCompatTextView? = null
-    private var inputValidation: InputValidation? = null
-    private var databaseHelper: DatabaseHelper? = null
-    private var user: User? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 //        supportActionBar!!.hide()
         initViews()
-        initListeners()
-        initObjects()
+        appCompatButtonRegister?.setOnClickListener{
+            onBackPressed()
+        }
     }
 
     private fun initViews() {
@@ -51,64 +50,4 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
         appCompatTextViewLoginLink = findViewById<View>(R.id.appCompatTextViewLoginLink) as AppCompatTextView
     }
 
-    private fun initListeners() {
-        appCompatButtonRegister!!.setOnClickListener(this)
-        appCompatTextViewLoginLink!!.setOnClickListener(this)
-    }
-
-    private fun initObjects() {
-        inputValidation = InputValidation(activity)
-        databaseHelper = DatabaseHelper(activity)
-        user = User()
-    }
-
-    override fun onClick(v: View) {
-        when (v.id) {
-            R.id.appCompatButtonRegister -> postDataToSQLite()
-            R.id.appCompatTextViewLoginLink -> finish()
-        }
-    }
-
-        private fun postDataToSQLite() {
-        if (!inputValidation!!.isInputEditTextFilled(textInputEditTextName!!, textInputLayoutName!!, getString(R.string.error_message_name))) {
-            return
-        }
-        if (!inputValidation!!.isInputEditTextFilled(textInputEditTextEmail!!, textInputLayoutEmail!!, getString(R.string.error_message_email))) {
-            return
-        }
-        if (!inputValidation!!.isInputEditTextEmail(textInputEditTextEmail!!, textInputLayoutEmail!!, getString(R.string.error_message_email))) {
-            return
-        }
-        if (!inputValidation!!.isInputEditTextFilled(textInputEditTextPassword!!, textInputLayoutPassword!!, getString(R.string.error_message_password))) {
-            return
-        }
-        if (!inputValidation!!.isInputEditTextMatches(textInputEditTextPassword!!, textInputEditTextConfirmPassword!!,
-                textInputLayoutConfirmPassword!!, getString(R.string.error_password_match))) {
-            return
-        }
-        if (!databaseHelper!!.checkUser(textInputEditTextEmail!!.text.toString().trim { it <= ' ' })) {
-            user!!.name = textInputEditTextName!!.text.toString().trim { it <= ' ' }
-            user!!.email = textInputEditTextEmail!!.text.toString().trim { it <= ' ' }
-            user!!.password = textInputEditTextPassword!!.text.toString().trim { it <= ' ' }
-            databaseHelper!!.addUser(user!!)
-
-            // Snack Bar to show success message that record saved successfully
-            Snackbar.make(ScrollView!!, getString(R.string.success_message), Snackbar.LENGTH_LONG).show()
-            emptyInputEditText()
-            val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
-            startActivity(intent)
-            finish()
-        } else {
-            // Snack Bar to show error message that record already exists
-            Snackbar.make(ScrollView!!, getString(R.string.error_email_exists), Snackbar.LENGTH_LONG).show()
-
-        }
-    }
-
-    private fun emptyInputEditText() {
-        textInputEditTextName!!.setText(null)
-        textInputEditTextEmail!!.setText(null)
-        textInputEditTextPassword!!.setText(null)
-        textInputEditTextConfirmPassword!!.setText(null)
-    }
 }

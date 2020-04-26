@@ -6,10 +6,11 @@ import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.lab6.BuildConfig
-import com.example.lab6.model.MovieApi
-import com.example.lab6.model.json.database.MovieDao
-import com.example.lab6.model.json.database.MovieDatabase
-import com.example.lab6.model.RetrofitService
+import com.example.lab6.model.api.MovieApi
+import com.example.lab6.model.database.MovieDao
+import com.example.lab6.model.database.MovieDatabase
+import com.example.lab6.model.api.RetrofitService
+import com.example.lab6.model.json.account.Singleton
 import com.example.lab6.model.json.favorites.FavResponse
 import com.example.lab6.model.json.movie.Result
 import com.google.gson.Gson
@@ -23,6 +24,9 @@ class MovieDetailViewModel(
 ) : ViewModel(), CoroutineScope {
 
     private val job = Job()
+    private val sessionId = Singleton.getSession()
+    private val accountId = Singleton.getAccountId()
+    val liveData = MutableLiveData<State>()
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
@@ -32,8 +36,6 @@ class MovieDetailViewModel(
     init {
         movieDao = MovieDatabase.getDatabase(context = context).movieDao()
     }
-
-    val liveData = MutableLiveData<State>()
 
     override fun onCleared() {
         super.onCleared()
@@ -46,7 +48,7 @@ class MovieDetailViewModel(
                 try {
                     val response = RetrofitService.getMovieApi(
                         MovieApi::class.java
-                    ).getMovieByIdCoroutine(id, BuildConfig.API_KEY, "ru")
+                    ).getMovieByIdCoroutine(accountId, BuildConfig.API_KEY, "ru")
 
                     if(response.isSuccessful) {
                         val result = response.body()
@@ -70,11 +72,12 @@ class MovieDetailViewModel(
         launch {
             val likeInt = withContext(Dispatchers.IO) {
                 try {
-                    val response = RetrofitService.getMovieApi(MovieApi::class.java)
+                    val response = RetrofitService.getMovieApi(
+                        MovieApi::class.java)
                         .hasLikeCoroutine(
                             movieId,
                             BuildConfig.API_KEY,
-                            "1d7900c966a3965dad207c6bd12abf21877b237d"
+                            sessionId
                         )
                     Log.d("TAG", response.toString())
                     if (response.isSuccessful) {
@@ -107,8 +110,9 @@ class MovieDetailViewModel(
             try {
                 RetrofitService.getMovieApi(MovieApi::class.java)
                     .markFavoriteMovieCoroutine(
-                        1,
-                        BuildConfig.API_KEY, "1d7900c966a3965dad207c6bd12abf21877b237d", body)
+                        accountId,
+                        BuildConfig.API_KEY,
+                        sessionId, body)
             } catch (e: Exception) { }
             if (favourite) {
                 movie?.liked = 11

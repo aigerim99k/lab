@@ -1,18 +1,12 @@
-package com.example.lab6.model
+package com.example.lab6.model.api
 
-import com.example.lab6.view.autorization.User
-import com.example.lab6.model.json.*
-import com.example.lab6.model.json.favorites.FavoriteRequest
-import com.example.lab6.model.json.favorites.FavoriteResponse
-import com.example.lab6.model.json.movie.Movie
+import com.example.lab6.model.json.account.RequestToken
 import com.example.lab6.model.json.movie.PopularMovies
 import com.example.lab6.model.json.movie.Result
-import com.example.lab6.model.json.movie.Session
-import com.example.lab6.model.json.movie.Validation
 import com.google.gson.JsonObject
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
+
 
 interface MovieApi {
     @GET("/3/movie/popular")
@@ -34,8 +28,7 @@ interface MovieApi {
     suspend fun hasLikeCoroutine(
         @Path("movie_id") movieId: Int?,
         @Query("api_key") apiKey: String,
-        @Query("session_id") sessionId: String?
-    ): Response<JsonObject>
+        @Query("session_id") sessionId: String?): Response<JsonObject>
 
     @GET("/3/account/{account_id}/favorite/movies")
      suspend fun getFavoriteMoviesCoroutine(@Path("account_id") userId: Int,
@@ -46,22 +39,24 @@ interface MovieApi {
     //auth
     //new token
     @GET("/3/authentication/token/new")
-    fun getNewToken(@Query("api_key") key: String): Call<TokenResponse>
+    suspend fun getRequestToken(@Query("api_key") key: String): Response<RequestToken>
     //validation with token
     @POST("/3/authentication/token/validate_with_login")
-    fun validation(
+    suspend fun validation(
         @Query("api_key") key: String,
-        @Body validation: Validation
-    ) : Call<TokenResponse>
+        @Body body: JsonObject) : Response<JsonObject>
     //create new session
     @POST("/3/authentication/session/new")
-    fun createSession(
+    suspend fun createSession(
         @Query("api_key") key: String,
-        @Body  token: TokenResponse) : Call<Session>
+        @Body body: JsonObject) : Response<JsonObject>
     //account
-    @GET("account")
-    fun getAccount(
+    @GET("/3/account")
+    suspend fun getAccount(
         @Query("api_key") key:String,
-        @Query("session_id") sessionId: String): Call<User>
+        @Query("session_id") sessionId: String): Response<JsonObject>
+    //delete
+    @DELETE("/3/authentication/session")
+    suspend fun deleteSession(@Query("api_key") apiKey: String, @Body body: JsonObject): Response<JsonObject>
 
 }
