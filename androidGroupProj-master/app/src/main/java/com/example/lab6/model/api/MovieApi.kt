@@ -56,7 +56,7 @@ interface MovieApi {
         @Query("api_key") key:String,
         @Query("session_id") sessionId: String): Response<JsonObject>
     //delete
-    @DELETE("/3/authentication/session")
+    @HTTP(method = "DELETE",path = "/3/authentication/session",hasBody = true)
     suspend fun deleteSession(@Query("api_key") apiKey: String, @Body body: JsonObject): Response<JsonObject>
 
 }

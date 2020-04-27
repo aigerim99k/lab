@@ -43,18 +43,18 @@ class MovieDetailViewModel(
     }
 
     fun getMovie(id: Int) {
+        liveData.value = State.ShowLoading
         launch {
             val movieDetail = withContext(Dispatchers.IO){
                 try {
-                    val response = RetrofitService.getMovieApi(
-                        MovieApi::class.java
-                    ).getMovieByIdCoroutine(accountId, BuildConfig.API_KEY, "ru")
+                    val response = RetrofitService.getMovieApi(MovieApi::class.java)
+                        .getMovieByIdCoroutine(id, BuildConfig.API_KEY, "ru")
 
                     if(response.isSuccessful) {
                         val result = response.body()
-                        if(result != null){
-                            result.runtime?.let { movieDao.updateMovieRuntime(it, id) }
-                            result.tagline?.let { movieDao.updateMovieTagline(it, id) }
+                        if (result != null) {
+                            result.runtime?.let { movieDao?.updateMovieRuntime(it, id) }
+                            result.tagline?.let { movieDao?.updateMovieTagline(it, id) }
                         }
                         result
                     }else{
@@ -64,6 +64,7 @@ class MovieDetailViewModel(
                     movieDao.getMovieById(id)
                 }
             }
+            liveData.value = State.HideLoading
             liveData.value = State.Movie(movieDetail)
         }
     }
@@ -96,11 +97,12 @@ class MovieDetailViewModel(
                     movieDao?.getLiked(movieId) ?: 0
                 }
             }
-            liveData.value = State.Result(likeInt)
+            liveData.value = State.Res(likeInt)
         }
     }
 
     fun likeMovie(favourite: Boolean, movie: Result?, movieId: Int?) {
+        liveData.value = State.ShowLoading
         launch {
             val body = JsonObject().apply {
                 addProperty("media_type", "movie")
@@ -135,11 +137,14 @@ class MovieDetailViewModel(
                     Toast.LENGTH_SHORT
                 ).show()
             }
+            liveData.value = State.HideLoading
         }
     }
 
     sealed class State {
-        data class Movie(val movie: com.example.lab6.model.json.movie.Result?) : State()
-        data class Result(val likeInt: Int?) : State()
+        object ShowLoading : State()
+        object HideLoading : State()
+        data class Movie(val movie: Result?) : State()
+        data class Res(val likeInt: Int?) : State()
     }
 }

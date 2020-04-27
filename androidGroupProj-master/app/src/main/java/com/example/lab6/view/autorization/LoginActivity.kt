@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
@@ -36,7 +37,7 @@ class LoginActivity : AppCompatActivity(){
     private lateinit var password: EditText
     private lateinit var login: EditText
     private lateinit var appCompatButtonLogin: AppCompatButton
-
+    private lateinit var progressBar: ProgressBar
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var preferences: SharedPreferences
     private var data: String? = null
@@ -54,6 +55,12 @@ class LoginActivity : AppCompatActivity(){
 
         loginViewModel.liveData.observe(this, Observer {
             when (it) {
+                is LoginViewModel.State.ShowLoading -> {
+                    progressBar.visibility = ProgressBar.VISIBLE
+                }
+                is LoginViewModel.State.HideLoading -> {
+                    progressBar.visibility = ProgressBar.INVISIBLE
+                }
                 is LoginViewModel.State.BadResult -> {
                     check()
                 }
@@ -134,5 +141,6 @@ class LoginActivity : AppCompatActivity(){
         textViewLinkForgotPassword = findViewById<View>(R.id.forgotPassword) as AppCompatTextView
         login = findViewById(R.id.login)
         password = findViewById(R.id.password)
+        progressBar = findViewById(R.id.progressBar)
     }
 }

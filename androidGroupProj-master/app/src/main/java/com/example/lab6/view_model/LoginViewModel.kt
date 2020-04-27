@@ -39,6 +39,7 @@ class LoginViewModel(private val context: Context) : ViewModel(), CoroutineScope
     }
 
     fun makeToken(name: String, password: String) {
+        liveData.value = State.ShowLoading
         launch {
             val response = RetrofitService.getMovieApi(MovieApi::class.java)
                 .getRequestToken(BuildConfig.API_KEY)
@@ -47,6 +48,7 @@ class LoginViewModel(private val context: Context) : ViewModel(), CoroutineScope
                 responseToken(name, password)
             }else{
                 liveData.value = State.BadResult
+                liveData.value = State.HideLoading
             }
         }
     }
@@ -70,6 +72,7 @@ class LoginViewModel(private val context: Context) : ViewModel(), CoroutineScope
                 getSession(name, body)
             } else {
                 liveData.value = State.BadResult
+                liveData.value = State.HideLoading
             }
         }
     }
@@ -87,6 +90,7 @@ class LoginViewModel(private val context: Context) : ViewModel(), CoroutineScope
                 getAccountId(name, sessionId)
             } else {
                 liveData.value = State.BadResult
+                liveData.value = State.HideLoading
             }
         }
     }
@@ -106,11 +110,14 @@ class LoginViewModel(private val context: Context) : ViewModel(), CoroutineScope
                 liveData.value = State.Result(json)
             } else {
                 liveData.value = State.BadResult
+                liveData.value = State.HideLoading
             }
         }
     }
 
     sealed class State {
+        object ShowLoading : State()
+        object HideLoading : State()
         data class Result(val json: String?) : State()
         object BadResult : State()
     }

@@ -6,6 +6,17 @@
         android:scrollbars="none"
         xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tool_bar" />
+
     <Toolbar
             android:id="@+id/tool_bar"
             android:layout_width="match_parent"
@@ -64,23 +75,24 @@
     </Toolbar>
 
     <androidx.core.widget.NestedScrollView
+            android:id="@+id/nestedScrollView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/tool_bar">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
             <ImageView
-                android:layout_width="120dp"
-                android:layout_height="200dp"
-                android:layout_centerHorizontal="true"
-                android:id="@+id/moviePhoto"
-                android:contentDescription="Movie Image"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_margin="10dp" />
+                    android:id="@+id/moviePhoto"
+                    android:layout_width="120dp"
+                    android:layout_height="200dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="10dp"
+                    android:contentDescription="Movie Image"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                     android:id="@+id/rusTitle"
@@ -88,22 +100,22 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="28dp"
-                    android:textColor="#000"
-                    android:text="Title"
-                    android:textSize="15sp"
                     android:layout_marginRight="10dp"
+                    android:text="Title"
+                    android:textColor="#000"
+                    android:textSize="15sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toEndOf="@id/moviePhoto"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                     android:id="@+id/countries"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#000"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="16dp"
-                    android:text="countries"
+                    android:text="США"
+                    android:textColor="#000"
                     app:layout_constraintStart_toEndOf="@+id/moviePhoto"
                     app:layout_constraintTop_toBottomOf="@+id/genres" />
 
@@ -111,11 +123,11 @@
                     android:id="@+id/originalTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#000"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="12dp"
                     android:layout_marginRight="10dp"
                     android:text="Title"
+                    android:textColor="#000"
                     android:textSize="15sp"
                     app:layout_constraintStart_toEndOf="@id/moviePhoto"
                     app:layout_constraintTop_toBottomOf="@id/rusTitle" />
@@ -126,14 +138,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="16dp"
-                    android:textColor="#000"
                     android:text="runtime"
+                    android:textColor="#000"
                     app:layout_constraintStart_toEndOf="@+id/countries"
                     app:layout_constraintTop_toBottomOf="@+id/genres" />
 
             <TextView
                     android:id="@+id/tagline"
-                    android:layout_width="wrap_content"
+                    android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="24dp"
@@ -156,9 +168,9 @@
                     android:id="@+id/view"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="30dp"
                     android:background="#C7C7C7"
-                    app:layout_constraintTop_toBottomOf="@id/moviePhoto" />
+                    app:layout_constraintTop_toBottomOf="@+id/tagline" />
 
             <Button
                     android:id="@+id/button2"
@@ -187,8 +199,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="20dp"
                     android:layout_marginTop="20dp"
-                    android:textColor="#000"
                     android:text="overview"
+                    android:textColor="#000"
                     app:layout_constraintTop_toBottomOf="@+id/view1"
                     tools:layout_editor_absoluteX="20dp" />
 
@@ -211,10 +223,10 @@
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#000"
                         android:layout_marginTop="15dp"
                         android:layout_toRightOf="@id/img_plenka"
                         android:text="Трейлер"
+                        android:textColor="#000"
 
                         />
             </RelativeLayout>
@@ -239,10 +251,10 @@
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#000"
                         android:layout_marginTop="15dp"
                         android:layout_toRightOf="@id/img_recenziya"
                         android:text="Рецензии"
+                        android:textColor="#000"
 
                         />
             </RelativeLayout>
@@ -258,9 +270,9 @@
                         android:id="@+id/text1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#000"
+                        android:layout_margin="10dp"
                         android:text="Рейтинг КиноПоиска:"
-                        android:layout_margin="10dp"/>
+                        android:textColor="#000" />
 
                 <RatingBar
                         android:id="@+id/starRating"
@@ -268,8 +280,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/text1"
-                        android:numStars="10"
                         android:layout_margin="10dp"
+                        android:numStars="10"
                         android:stepSize="0.5" />
 
                 <TextView
@@ -277,28 +289,28 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/starRating"
-                        android:text="Моя оценка:  -"
-                        android:layout_margin="10dp"/>
+                        android:layout_margin="10dp"
+                        android:text="Моя оценка:  -" />
 
                 <TextView
                         android:id="@+id/rating"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_toRightOf="@id/starRating"
                         android:layout_below="@id/text1"
-                        android:layout_marginTop="10dp"
                         android:layout_marginLeft="50dp"
-                        android:text="rating"/>
+                        android:layout_marginTop="10dp"
+                        android:layout_toRightOf="@id/starRating"
+                        android:text="rating" />
 
                 <TextView
                         android:id="@+id/voteCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_toRightOf="@id/rating"
                         android:layout_below="@id/text1"
-                        android:layout_marginTop="10dp"
                         android:layout_marginLeft="50dp"
-                        android:text="rating"/>
+                        android:layout_marginTop="10dp"
+                        android:layout_toRightOf="@id/rating"
+                        android:text="rating" />
             </RelativeLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
