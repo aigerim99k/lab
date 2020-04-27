@@ -4,10 +4,11 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.lab6.BuildConfig
-import com.example.lab6.model.MovieApi
-import com.example.lab6.model.json.database.MovieDao
-import com.example.lab6.model.json.database.MovieDatabase
-import com.example.lab6.model.RetrofitService
+import com.example.lab6.model.api.MovieApi
+import com.example.lab6.model.database.MovieDao
+import com.example.lab6.model.database.MovieDatabase
+import com.example.lab6.model.api.RetrofitService
+import com.example.lab6.model.json.account.Singleton
 import com.google.gson.JsonObject
 import kotlinx.coroutines.*
 import java.lang.Exception
@@ -18,6 +19,8 @@ class FavoriteListViewModel(private val context: Context) : ViewModel(), Corouti
     private val job = Job()
 
     val liveData = MutableLiveData<State>()
+    private var sessionId = Singleton.getSession()
+    private var accountId = Singleton.getAccountId()
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
@@ -42,11 +45,12 @@ class FavoriteListViewModel(private val context: Context) : ViewModel(), Corouti
                     addProperty("favorite", true)
                 }
                 try {
-                    val response = RetrofitService.getMovieApi(MovieApi::class.java)
+                    val response = RetrofitService.getMovieApi(
+                        MovieApi::class.java)
                         .getFavoriteMoviesCoroutine(
-                            1,
+                            accountId,
                             BuildConfig.API_KEY,
-                            "1d7900c966a3965dad207c6bd12abf21877b237d",
+                            sessionId,
                             "rus"
                         )
                     if (response.isSuccessful) {
@@ -69,11 +73,12 @@ class FavoriteListViewModel(private val context: Context) : ViewModel(), Corouti
                     addProperty("favorite", false)
                 }
                 try {
-                    val response = RetrofitService.getMovieApi(MovieApi::class.java)
+                    val response = RetrofitService.getMovieApi(
+                        MovieApi::class.java)
                         .markFavoriteMovieCoroutine(
-                            1,
+                            accountId,
                             BuildConfig.API_KEY,
-                            "1d7900c966a3965dad207c6bd12abf21877b237d",
+                            sessionId,
                             body
                         )
                     if (response.isSuccessful) {
@@ -89,10 +94,11 @@ class FavoriteListViewModel(private val context: Context) : ViewModel(), Corouti
 
             val list = withContext(Dispatchers.IO) {
                 try {
-                    val response = RetrofitService.getMovieApi(MovieApi::class.java).getFavoriteMoviesCoroutine(
-                        1,
+                    val response = RetrofitService.getMovieApi(
+                        MovieApi::class.java).getFavoriteMoviesCoroutine(
+                        accountId,
                         BuildConfig.API_KEY,
-                        "1d7900c966a3965dad207c6bd12abf21877b237d",
+                        sessionId,
                         "rus"
                     )
                     if (response.isSuccessful) {

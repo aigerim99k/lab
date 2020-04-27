@@ -6,10 +6,11 @@ import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.lab6.BuildConfig
-import com.example.lab6.model.MovieApi
-import com.example.lab6.model.json.database.MovieDao
-import com.example.lab6.model.json.database.MovieDatabase
-import com.example.lab6.model.RetrofitService
+import com.example.lab6.model.api.MovieApi
+import com.example.lab6.model.database.MovieDao
+import com.example.lab6.model.database.MovieDatabase
+import com.example.lab6.model.api.RetrofitService
+import com.example.lab6.model.json.account.Singleton
 import com.example.lab6.model.json.favorites.FavResponse
 import com.example.lab6.model.json.movie.Result
 import com.google.gson.Gson
@@ -23,6 +24,9 @@ class MovieDetailViewModel(
 ) : ViewModel(), CoroutineScope {
 
     private val job = Job()
+    private val sessionId = Singleton.getSession()
+    private val accountId = Singleton.getAccountId()
+    val liveData = MutableLiveData<State>()
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
@@ -33,26 +37,24 @@ class MovieDetailViewModel(
         movieDao = MovieDatabase.getDatabase(context = context).movieDao()
     }
 
-    val liveData = MutableLiveData<State>()
-
     override fun onCleared() {
         super.onCleared()
         job.cancel()
     }
 
     fun getMovie(id: Int) {
+        liveData.value = State.ShowLoading
         launch {
             val movieDetail = withContext(Dispatchers.IO){
                 try {
-                    val response = RetrofitService.getMovieApi(
-                        MovieApi::class.java
-                    ).getMovieByIdCoroutine(id, BuildConfig.API_KEY, "ru")
+                    val response = RetrofitService.getMovieApi(MovieApi::class.java)
+                        .getMovieByIdCoroutine(id, BuildConfig.API_KEY, "ru")
 
                     if(response.isSuccessful) {
                         val result = response.body()
-                        if(result != null){
-                            result.runtime?.let { movieDao.updateMovieRuntime(it, id) }
-                            result.tagline?.let { movieDao.updateMovieTagline(it, id) }
+                        if (result != null) {
+                            result.runtime?.let { movieDao?.updateMovieRuntime(it, id) }
+                            result.tagline?.let { movieDao?.updateMovieTagline(it, id) }
                         }
                         result
                     }else{
@@ -62,6 +64,7 @@ class MovieDetailViewModel(
                     movieDao.getMovieById(id)
                 }
             }
+            liveData.value = State.HideLoading
             liveData.value = State.Movie(movieDetail)
         }
     }
@@ -70,11 +73,12 @@ class MovieDetailViewModel(
         launch {
             val likeInt = withContext(Dispatchers.IO) {
                 try {
-                    val response = RetrofitService.getMovieApi(MovieApi::class.java)
+                    val response = RetrofitService.getMovieApi(
+                        MovieApi::class.java)
                         .hasLikeCoroutine(
                             movieId,
                             BuildConfig.API_KEY,
-                            "1d7900c966a3965dad207c6bd12abf21877b237d"
+                            sessionId
                         )
                     Log.d("TAG", response.toString())
                     if (response.isSuccessful) {
@@ -93,11 +97,12 @@ class MovieDetailViewModel(
                     movieDao?.getLiked(movieId) ?: 0
                 }
             }
-            liveData.value = State.Result(likeInt)
+            liveData.value = State.Res(likeInt)
         }
     }
 
     fun likeMovie(favourite: Boolean, movie: Result?, movieId: Int?) {
+        liveData.value = State.ShowLoading
         launch {
             val body = JsonObject().apply {
                 addProperty("media_type", "movie")
@@ -107,8 +112,9 @@ class MovieDetailViewModel(
             try {
                 RetrofitService.getMovieApi(MovieApi::class.java)
                     .markFavoriteMovieCoroutine(
-                        1,
-                        BuildConfig.API_KEY, "1d7900c966a3965dad207c6bd12abf21877b237d", body)
+                        accountId,
+                        BuildConfig.API_KEY,
+                        sessionId, body)
             } catch (e: Exception) { }
             if (favourite) {
                 movie?.liked = 11
@@ -131,11 +137,14 @@ class MovieDetailViewModel(
                     Toast.LENGTH_SHORT
                 ).show()
             }
+            liveData.value = State.HideLoading
         }
     }
 
     sealed class State {
-        data class Movie(val movie: com.example.lab6.model.json.movie.Result?) : State()
-        data class Result(val likeInt: Int?) : State()
+        object ShowLoading : State()
+        object HideLoading : State()
+        data class Movie(val movie: Result?) : State()
+        data class Res(val likeInt: Int?) : State()
     }
 }

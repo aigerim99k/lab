@@ -3,6 +3,7 @@ package com.example.lab6.view.movie
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -29,7 +30,7 @@ class MovieDetailActivity : AppCompatActivity(){
     lateinit var votes: TextView
     lateinit var ratingBar: RatingBar
     lateinit var like: ImageView
-
+    private lateinit var progressBar: ProgressBar
     private var movie: Result? = null
     private var movieId: Int? = null
 
@@ -49,17 +50,22 @@ class MovieDetailActivity : AppCompatActivity(){
 
     private fun getMovieCoroutine(id: Int){
         val viewModelProviderFactory = ViewModelProviderFactory(context = this@MovieDetailActivity)
-        movieDetailsViewModel =
-            ViewModelProvider(this, viewModelProviderFactory).get(MovieDetailViewModel::class.java)
+        movieDetailsViewModel = ViewModelProvider(this, viewModelProviderFactory).get(MovieDetailViewModel::class.java)
 
         movieDetailsViewModel.getMovie(id)
         movieDetailsViewModel.liveData.observe(this, Observer { result ->
             when(result){
-                is MovieDetailViewModel.State.Movie -> {
-                    setData(result.movie!!)
-                    movie = result.movie
+                is MovieDetailViewModel.State.ShowLoading -> {
+                    progressBar.visibility = ProgressBar.VISIBLE
                 }
-                is MovieDetailViewModel.State.Result -> {
+                is MovieDetailViewModel.State.HideLoading -> {
+                    progressBar.visibility = ProgressBar.INVISIBLE
+                }
+                is MovieDetailViewModel.State.Movie -> {
+                    movie = result.movie
+                    setData(movie!!)
+                }
+                is MovieDetailViewModel.State.Res -> {
                     if (result.likeInt == 1 || result.likeInt == 11) {
                         like.setImageResource(R.drawable.ic_lliked)
                     } else {
@@ -89,15 +95,22 @@ class MovieDetailActivity : AppCompatActivity(){
         }
 
         titleOriginal.text = movie.originalTitle + "(" + str + ")"
-        genres.text = getListOfString(movie.genres?.map { it.name }.toString().length, movie.genres?.map { it.name }.toString())
-        tagline.text = "«" + movie.tagline + "»"
         rusTitle.text = movie.title
-        countries.text = getListOfString(movie.productionCountries?.map { it.iso }.toString().length, movie.productionCountries?.map { it.iso }.toString())
-        runtime.text = movie.runtime.toString()
         overview.text = movie.overview
         rating.text = movie.voteAverage.toString()
         votes.text = movie.voteCount.toString()
         ratingBar.rating = movie.voteAverage.toFloat()
+        genres.text = getListOfString(movie.genres?.map { it.name }.toString().length, movie.genres?.map { it.name }.toString())
+        if(movie.productionCountries != null) {
+            countries.text = getListOfString(movie.productionCountries?.map { it.iso_3166_1}.toString().length, movie.productionCountries?.map { it.iso_3166_1 }.toString())
+        }
+
+        if (movie.runtime != null) {
+            runtime.text = movie.runtime.toString() + "мин"
+        }
+        if (movie.tagline != null) {
+            tagline.text = "«" + movie.tagline + "»"
+        }
 
         hasLike(movie.id)
 
@@ -126,6 +139,7 @@ class MovieDetailActivity : AppCompatActivity(){
         votes = findViewById(R.id.voteCount)
         ratingBar = findViewById(R.id.starRating)
         like = findViewById(R.id.like)
+        progressBar = findViewById(R.id.progressBar)
     }
 
     private fun getListOfString(len: Int, s: String): String {
