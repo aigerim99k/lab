@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
@@ -82,4 +82,10 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+
+    //Firebase Analytics
+    implementation 'com.google.firebase:firebase-analytics:17.2.2'
+
+    //FireBase Push
+    implementation 'com.google.firebase:firebase-messaging:20.1.6'
 }

@@ -11,6 +11,7 @@ import com.example.lab6.*
 import com.example.lab6.view.BaseActivity
 import com.example.lab6.view_model.MovieListViewModel
 import com.example.lab6.view_model.ViewModelProviderFactory
+import com.google.firebase.messaging.FirebaseMessaging
 
 class MainActivity : BaseActivity(0){
 
@@ -28,6 +29,15 @@ class MainActivity : BaseActivity(0){
         setContentView(R.layout.activity_main)
 
         Log.d(TAG, "onCreate")
+
+        FirebaseMessaging.getInstance().subscribeToTopic("movies")
+            .addOnCompleteListener { task ->
+                var msg = "Subscribed"
+                if (!task.isSuccessful) {
+                    msg = "Not subscribed"
+                }
+                Log.d("TAGGG", msg)
+            }
 
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout)
         recyclerView = findViewById(R.id.recyclerView)
